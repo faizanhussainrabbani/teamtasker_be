@@ -26,5 +26,25 @@ namespace TeamTasker.Application.Common.Models
             get => _pageSize;
             set => _pageSize = value > MaxPageSize ? MaxPageSize : value < 1 ? 1 : value;
         }
+
+        /// <summary>
+        /// Sort by field
+        /// </summary>
+        public string SortBy { get; set; }
+
+        /// <summary>
+        /// Sort direction (asc or desc)
+        /// </summary>
+        public string SortDirection { get; set; }
+
+        /// <summary>
+        /// Search query
+        /// </summary>
+        public string Search { get; set; }
+
+        /// <summary>
+        /// Get sort direction as boolean (true for ascending, false for descending)
+        /// </summary>
+        public bool SortAscending => string.IsNullOrEmpty(SortDirection) ? true : SortDirection.ToLower() == "asc";
     }
 }

@@ -12,6 +12,7 @@ using TeamTasker.Infrastructure.Authentication;
 using TeamTasker.Infrastructure.Data;
 using TeamTasker.Infrastructure.Repositories;
 using TeamTasker.Infrastructure.Services;
+using TeamTasker.Infrastructure.Settings;
 using TeamTasker.SharedKernel.Interfaces;
 
 namespace TeamTasker.Infrastructure
@@ -46,6 +47,15 @@ namespace TeamTasker.Infrastructure
             services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
             services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
             services.AddSingleton<IPasswordHasher, PasswordHasher>();
+
+            // Register email and password reset services
+            services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
+            services.Configure<AppSettings>(configuration.GetSection("AppSettings"));
+            services.AddSingleton<IEmailService, EmailService>();
+            services.AddSingleton<IPasswordResetTokenService, PasswordResetTokenService>();
+
+            // Register distributed cache for token storage
+            services.AddDistributedMemoryCache();
 
             services.AddAuthentication(options =>
             {
