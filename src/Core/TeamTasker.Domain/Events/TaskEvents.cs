@@ -66,4 +66,38 @@ namespace TeamTasker.Domain.Events
             Project = project;
         }
     }
+
+    public class TaskProgressUpdatedEvent : INotification
+    {
+        public Entities.Task TaskItem { get; }
+
+        public TaskProgressUpdatedEvent(Entities.Task task)
+        {
+            TaskItem = task;
+        }
+    }
+
+    public class TaskTagAddedEvent : INotification
+    {
+        public Entities.Task TaskItem { get; }
+        public string Tag { get; }
+
+        public TaskTagAddedEvent(Entities.Task task, string tag)
+        {
+            TaskItem = task;
+            Tag = tag;
+        }
+    }
+
+    public class TaskTagRemovedEvent : INotification
+    {
+        public Entities.Task TaskItem { get; }
+        public string Tag { get; }
+
+        public TaskTagRemovedEvent(Entities.Task task, string tag)
+        {
+            TaskItem = task;
+            Tag = tag;
+        }
+    }
 }

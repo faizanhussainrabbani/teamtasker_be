@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TeamTasker.Infrastructure.Data;
 
@@ -10,9 +11,11 @@ using TeamTasker.Infrastructure.Data;
 namespace TeamTasker.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250423093549_AddAuthenticationAndUserManagement")]
+    partial class AddAuthenticationAndUserManagement
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.4");
@@ -430,26 +433,31 @@ namespace TeamTasker.Infrastructure.Migrations
                                 .HasColumnType("INTEGER");
 
                             b1.Property<string>("City")
+                                .IsRequired()
                                 .HasMaxLength(50)
                                 .HasColumnType("TEXT")
                                 .HasColumnName("City");
 
                             b1.Property<string>("Country")
+                                .IsRequired()
                                 .HasMaxLength(50)
                                 .HasColumnType("TEXT")
                                 .HasColumnName("Country");
 
                             b1.Property<string>("State")
+                                .IsRequired()
                                 .HasMaxLength(50)
                                 .HasColumnType("TEXT")
                                 .HasColumnName("State");
 
                             b1.Property<string>("Street")
+                                .IsRequired()
                                 .HasMaxLength(100)
                                 .HasColumnType("TEXT")
                                 .HasColumnName("Street");
 
                             b1.Property<string>("ZipCode")
+                                .IsRequired()
                                 .HasMaxLength(20)
                                 .HasColumnType("TEXT")
                                 .HasColumnName("ZipCode");
