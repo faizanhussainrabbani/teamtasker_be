@@ -1,0 +1,14 @@
+﻿/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/tests/TeamTasker.Application.UnitTests/Projects/Commands/CreateProjectCommandTests.cs
+/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/tests/TeamTasker.Application.UnitTests/Projects/Commands/CreateProjectCommandValidatorTests.cs
+/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/tests/TeamTasker.Application.UnitTests/Projects/Commands/DeleteProjectCommandTests.cs
+/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/tests/TeamTasker.Application.UnitTests/Projects/Commands/UpdateProjectCommandTests.cs
+/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/tests/TeamTasker.Application.UnitTests/Projects/Queries/GetProjectByIdQueryTests.cs
+/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/tests/TeamTasker.Application.UnitTests/Projects/Queries/GetProjectsQueryTests.cs
+/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/tests/TeamTasker.Application.UnitTests/UnitTest1.cs
+/Users/faizanhussain/.nuget/packages/microsoft.net.test.sdk/17.8.0/build/netcoreapp3.1/Microsoft.NET.Test.Sdk.Program.cs
+/Users/faizanhussain/.nuget/packages/xunit.runner.visualstudio/2.5.3/build/net6.0/xunit.runner.visualstudio.dotnetcore.testadapter.dll
+/Users/faizanhussain/.nuget/packages/xunit.runner.visualstudio/2.5.3/build/net6.0/xunit.runner.reporters.netcoreapp10.dll
+/Users/faizanhussain/.nuget/packages/xunit.runner.visualstudio/2.5.3/build/net6.0/xunit.runner.utility.netcoreapp10.dll
+/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/tests/TeamTasker.Application.UnitTests/TestResults/6ddfb068-b3d8-4f31-8273-8794eee5c7f0/coverage.cobertura.xml
+/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/tests/TeamTasker.Application.UnitTests/TestResults/be4e1c84-9a32-4fbd-9a24-1a84b5908ea7/coverage.cobertura.xml
+/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/tests/TeamTasker.Application.UnitTests/TestResults/d2b6cc88-74c4-4b22-a5b3-aa2271d6213e/coverage.cobertura.xml

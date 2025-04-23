@@ -1,0 +1,11 @@
+﻿/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/src/Core/TeamTasker.Domain/Class1.cs
+/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/src/Core/TeamTasker.Domain/Entities/Project.cs
+/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/src/Core/TeamTasker.Domain/Entities/Task.cs
+/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/src/Core/TeamTasker.Domain/Entities/User.cs
+/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/src/Core/TeamTasker.Domain/Events/ProjectEvents.cs
+/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/src/Core/TeamTasker.Domain/Events/TaskEvents.cs
+/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/src/Core/TeamTasker.Domain/Events/UserEvents.cs
+/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/src/Core/TeamTasker.Domain/Interfaces/IProjectRepository.cs
+/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/src/Core/TeamTasker.Domain/Interfaces/ITaskRepository.cs
+/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/src/Core/TeamTasker.Domain/Interfaces/IUserRepository.cs
+/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/src/Core/TeamTasker.Domain/ValueObjects/Address.cs

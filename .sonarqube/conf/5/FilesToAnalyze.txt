@@ -1,0 +1,16 @@
+﻿/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/src/Infrastructure/TeamTasker.Infrastructure/Class1.cs
+/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/src/Infrastructure/TeamTasker.Infrastructure/Data/ApplicationDbContext.cs
+/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/src/Infrastructure/TeamTasker.Infrastructure/Data/Configurations/ProjectConfiguration.cs
+/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/src/Infrastructure/TeamTasker.Infrastructure/Data/Configurations/TaskConfiguration.cs
+/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/src/Infrastructure/TeamTasker.Infrastructure/Data/Configurations/UserConfiguration.cs
+/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/src/Infrastructure/TeamTasker.Infrastructure/Data/EfRepository.cs
+/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/src/Infrastructure/TeamTasker.Infrastructure/Data/SpecificationEvaluator.cs
+/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/src/Infrastructure/TeamTasker.Infrastructure/DependencyInjection.cs
+/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/src/Infrastructure/TeamTasker.Infrastructure/Migrations/20250423082445_InitialCreate.cs
+/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/src/Infrastructure/TeamTasker.Infrastructure/Migrations/20250423082445_InitialCreate.Designer.cs
+/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/src/Infrastructure/TeamTasker.Infrastructure/Migrations/ApplicationDbContextModelSnapshot.cs
+/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/src/Infrastructure/TeamTasker.Infrastructure/Repositories/ProjectRepository.cs
+/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/src/Infrastructure/TeamTasker.Infrastructure/Repositories/TaskRepository.cs
+/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/src/Infrastructure/TeamTasker.Infrastructure/Repositories/UserRepository.cs
+/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/src/Infrastructure/TeamTasker.Infrastructure/Services/CurrentUserService.cs
+/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/src/Infrastructure/TeamTasker.Infrastructure/Services/DomainEventDispatcher.cs

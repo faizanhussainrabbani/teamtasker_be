@@ -1,0 +1,426 @@
+{
+  "$schema": "http://json.schemastore.org/sarif-1.0.0",
+  "version": "1.0.0",
+  "runs": [
+    {
+      "tool": {
+        "name": "Microsoft (R) Visual C# Compiler",
+        "version": "4.11.0.0",
+        "fileVersion": "4.11.0-3.24554.2 (bc1c3011)",
+        "semanticVersion": "4.11.0",
+        "language": "en-US"
+      },
+      "results": [
+        {
+          "ruleId": "CS7036",
+          "level": "error",
+          "message": "There is no argument given that corresponds to the required parameter 'dbContext' of 'GetProjectsQueryHandler.GetProjectsQueryHandler(IProjectRepository, ICurrentUserService, IApplicationDbContext)'",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/tests/TeamTasker.Application.UnitTests/Projects/Queries/GetProjectsQueryTests.cs",
+                "region": {
+                  "startLine": 26,
+                  "startColumn": 28,
+                  "endLine": 26,
+                  "endColumn": 51
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CS8625",
+          "level": "warning",
+          "message": "Cannot convert null literal to non-nullable reference type.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/tests/TeamTasker.Application.UnitTests/Projects/Commands/DeleteProjectCommandTests.cs",
+                "region": {
+                  "startLine": 63,
+                  "startColumn": 51,
+                  "endLine": 63,
+                  "endColumn": 55
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8600",
+          "level": "warning",
+          "message": "Converting null literal or possible null value to non-nullable type.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/tests/TeamTasker.Application.UnitTests/Projects/Commands/CreateProjectCommandTests.cs",
+                "region": {
+                  "startLine": 37,
+                  "startColumn": 39,
+                  "endLine": 37,
+                  "endColumn": 43
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS8625",
+          "level": "warning",
+          "message": "Cannot convert null literal to non-nullable reference type.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/tests/TeamTasker.Application.UnitTests/Projects/Commands/UpdateProjectCommandTests.cs",
+                "region": {
+                  "startLine": 77,
+                  "startColumn": 51,
+                  "endLine": 77,
+                  "endColumn": 55
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "CS1061",
+          "level": "error",
+          "message": "'ObjectAssertions' does not contain a definition for 'HaveCount' and no accessible extension method 'HaveCount' accepting a first argument of type 'ObjectAssertions' could be found (are you missing a using directive or an assembly reference?)",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/tests/TeamTasker.Application.UnitTests/Projects/Queries/GetProjectsQueryTests.cs",
+                "region": {
+                  "startLine": 50,
+                  "startColumn": 29,
+                  "endLine": 50,
+                  "endColumn": 38
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CS0021",
+          "level": "error",
+          "message": "Cannot apply indexing with [] to an expression of type 'PaginatedList<ProjectDto>'",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/tests/TeamTasker.Application.UnitTests/Projects/Queries/GetProjectsQueryTests.cs",
+                "region": {
+                  "startLine": 52,
+                  "startColumn": 13,
+                  "endLine": 52,
+                  "endColumn": 22
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CS0021",
+          "level": "error",
+          "message": "Cannot apply indexing with [] to an expression of type 'PaginatedList<ProjectDto>'",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/tests/TeamTasker.Application.UnitTests/Projects/Queries/GetProjectsQueryTests.cs",
+                "region": {
+                  "startLine": 53,
+                  "startColumn": 13,
+                  "endLine": 53,
+                  "endColumn": 22
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CS0021",
+          "level": "error",
+          "message": "Cannot apply indexing with [] to an expression of type 'PaginatedList<ProjectDto>'",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/tests/TeamTasker.Application.UnitTests/Projects/Queries/GetProjectsQueryTests.cs",
+                "region": {
+                  "startLine": 54,
+                  "startColumn": 13,
+                  "endLine": 54,
+                  "endColumn": 22
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CS0021",
+          "level": "error",
+          "message": "Cannot apply indexing with [] to an expression of type 'PaginatedList<ProjectDto>'",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/tests/TeamTasker.Application.UnitTests/Projects/Queries/GetProjectsQueryTests.cs",
+                "region": {
+                  "startLine": 56,
+                  "startColumn": 13,
+                  "endLine": 56,
+                  "endColumn": 22
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CS0021",
+          "level": "error",
+          "message": "Cannot apply indexing with [] to an expression of type 'PaginatedList<ProjectDto>'",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/tests/TeamTasker.Application.UnitTests/Projects/Queries/GetProjectsQueryTests.cs",
+                "region": {
+                  "startLine": 57,
+                  "startColumn": 13,
+                  "endLine": 57,
+                  "endColumn": 22
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CS0021",
+          "level": "error",
+          "message": "Cannot apply indexing with [] to an expression of type 'PaginatedList<ProjectDto>'",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/tests/TeamTasker.Application.UnitTests/Projects/Queries/GetProjectsQueryTests.cs",
+                "region": {
+                  "startLine": 58,
+                  "startColumn": 13,
+                  "endLine": 58,
+                  "endColumn": 22
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CS0021",
+          "level": "error",
+          "message": "Cannot apply indexing with [] to an expression of type 'PaginatedList<ProjectDto>'",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/tests/TeamTasker.Application.UnitTests/Projects/Queries/GetProjectsQueryTests.cs",
+                "region": {
+                  "startLine": 60,
+                  "startColumn": 13,
+                  "endLine": 60,
+                  "endColumn": 22
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CS0021",
+          "level": "error",
+          "message": "Cannot apply indexing with [] to an expression of type 'PaginatedList<ProjectDto>'",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/tests/TeamTasker.Application.UnitTests/Projects/Queries/GetProjectsQueryTests.cs",
+                "region": {
+                  "startLine": 61,
+                  "startColumn": 13,
+                  "endLine": 61,
+                  "endColumn": 22
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CS0021",
+          "level": "error",
+          "message": "Cannot apply indexing with [] to an expression of type 'PaginatedList<ProjectDto>'",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/tests/TeamTasker.Application.UnitTests/Projects/Queries/GetProjectsQueryTests.cs",
+                "region": {
+                  "startLine": 62,
+                  "startColumn": 13,
+                  "endLine": 62,
+                  "endColumn": 22
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CS1061",
+          "level": "error",
+          "message": "'ObjectAssertions' does not contain a definition for 'BeEmpty' and no accessible extension method 'BeEmpty' accepting a first argument of type 'ObjectAssertions' could be found (are you missing a using directive or an assembly reference?)",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/tests/TeamTasker.Application.UnitTests/Projects/Queries/GetProjectsQueryTests.cs",
+                "region": {
+                  "startLine": 79,
+                  "startColumn": 29,
+                  "endLine": 79,
+                  "endColumn": 36
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CS8625",
+          "level": "warning",
+          "message": "Cannot convert null literal to non-nullable reference type.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/tests/TeamTasker.Application.UnitTests/Projects/Queries/GetProjectByIdQueryTests.cs",
+                "region": {
+                  "startLine": 82,
+                  "startColumn": 51,
+                  "endLine": 82,
+                  "endColumn": 55
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S2699",
+          "level": "warning",
+          "message": "Add at least one assertion to this test case.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/tests/TeamTasker.Application.UnitTests/UnitTest1.cs",
+                "region": {
+                  "startLine": 6,
+                  "startColumn": 17,
+                  "endLine": 6,
+                  "endColumn": 22
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        }
+      ],
+      "rules": {
+        "CS0021": {
+          "id": "CS0021",
+          "defaultLevel": "error",
+          "helpUri": "https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS0021)",
+          "properties": {
+            "category": "Compiler",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Compiler",
+              "Telemetry",
+              "NotConfigurable"
+            ]
+          }
+        },
+        "CS1061": {
+          "id": "CS1061",
+          "defaultLevel": "error",
+          "helpUri": "https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS1061)",
+          "properties": {
+            "category": "Compiler",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Compiler",
+              "Telemetry",
+              "NotConfigurable"
+            ]
+          }
+        },
+        "CS7036": {
+          "id": "CS7036",
+          "defaultLevel": "error",
+          "helpUri": "https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS7036)",
+          "properties": {
+            "category": "Compiler",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Compiler",
+              "Telemetry",
+              "NotConfigurable"
+            ]
+          }
+        },
+        "CS8600": {
+          "id": "CS8600",
+          "shortDescription": "Converting null literal or possible null value to non-nullable type.",
+          "defaultLevel": "warning",
+          "helpUri": "https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS8600)",
+          "properties": {
+            "category": "Compiler",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Compiler",
+              "Telemetry"
+            ]
+          }
+        },
+        "CS8625": {
+          "id": "CS8625",
+          "shortDescription": "Cannot convert null literal to non-nullable reference type.",
+          "defaultLevel": "warning",
+          "helpUri": "https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS8625)",
+          "properties": {
+            "category": "Compiler",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Compiler",
+              "Telemetry"
+            ]
+          }
+        },
+        "S2699": {
+          "id": "S2699",
+          "shortDescription": "Tests should include assertions",
+          "fullDescription": "The rule targets test methods that lack an assertion and consist solely of an action and, optionally, a setup.",
+          "defaultLevel": "warning",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-2699",
+          "properties": {
+            "category": "Blocker Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "TestSourceScope",
+              "SonarWay"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}
