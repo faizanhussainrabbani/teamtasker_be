@@ -30,17 +30,17 @@ namespace TeamTasker.Application.Common.Models
         /// <summary>
         /// Sort by field
         /// </summary>
-        public string SortBy { get; set; }
+        public string? SortBy { get; set; }
 
         /// <summary>
         /// Sort direction (asc or desc)
         /// </summary>
-        public string SortDirection { get; set; }
+        public string? SortDirection { get; set; }
 
         /// <summary>
         /// Search query
         /// </summary>
-        public string Search { get; set; }
+        public string? Search { get; set; }
 
         /// <summary>
         /// Get sort direction as boolean (true for ascending, false for descending)
