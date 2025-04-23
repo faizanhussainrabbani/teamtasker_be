@@ -1,9 +1,0 @@
-﻿/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/tests/TeamTasker.Infrastructure.UnitTests/Data/EfRepositoryTests.cs
-/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/tests/TeamTasker.Infrastructure.UnitTests/Repositories/ProjectRepositoryTests.cs
-/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/tests/TeamTasker.Infrastructure.UnitTests/Repositories/TaskRepositoryTests.cs
-/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/tests/TeamTasker.Infrastructure.UnitTests/UnitTest1.cs
-/Users/faizanhussain/.nuget/packages/microsoft.net.test.sdk/17.8.0/build/netcoreapp3.1/Microsoft.NET.Test.Sdk.Program.cs
-/Users/faizanhussain/.nuget/packages/xunit.runner.visualstudio/2.5.3/build/net6.0/xunit.runner.visualstudio.dotnetcore.testadapter.dll
-/Users/faizanhussain/.nuget/packages/xunit.runner.visualstudio/2.5.3/build/net6.0/xunit.runner.reporters.netcoreapp10.dll
-/Users/faizanhussain/.nuget/packages/xunit.runner.visualstudio/2.5.3/build/net6.0/xunit.runner.utility.netcoreapp10.dll
-/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/tests/TeamTasker.Infrastructure.UnitTests/TestResults/64493406-8457-4548-b256-d357d11db69e/coverage.cobertura.xml

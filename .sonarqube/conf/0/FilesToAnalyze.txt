@@ -1,7 +1,0 @@
-﻿/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/src/Core/TeamTasker.SharedKernel/BaseEntity.cs
-/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/src/Core/TeamTasker.SharedKernel/BaseSpecification.cs
-/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/src/Core/TeamTasker.SharedKernel/Class1.cs
-/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/src/Core/TeamTasker.SharedKernel/Interfaces/IDomainEventDispatcher.cs
-/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/src/Core/TeamTasker.SharedKernel/Interfaces/IRepository.cs
-/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/src/Core/TeamTasker.SharedKernel/Interfaces/ISpecification.cs
-/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/src/Core/TeamTasker.SharedKernel/ValueObject.cs
