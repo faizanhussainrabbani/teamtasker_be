@@ -13,6 +13,7 @@ using TeamTasker.Application.Users.Models;
 using TeamTasker.Domain.Entities;
 using TeamTasker.Domain.Interfaces;
 using TeamTasker.Domain.ValueObjects;
+using TeamTasker.Infrastructure.Data;
 
 namespace TeamTasker.API.Controllers
 {
@@ -73,9 +74,9 @@ namespace TeamTasker.API.Controllers
                 if (!string.IsNullOrEmpty(filterParams.Search))
                 {
                     var search = filterParams.Search.ToLower();
-                    query = query.Where(u => 
-                        u.FirstName.ToLower().Contains(search) || 
-                        u.LastName.ToLower().Contains(search) || 
+                    query = query.Where(u =>
+                        u.FirstName.ToLower().Contains(search) ||
+                        u.LastName.ToLower().Contains(search) ||
                         u.Email.ToLower().Contains(search) ||
                         u.Username.ToLower().Contains(search));
                 }
@@ -85,25 +86,25 @@ namespace TeamTasker.API.Controllers
                 {
                     query = filterParams.SortBy.ToLower() switch
                     {
-                        "name" => filterParams.SortAscending 
+                        "name" => filterParams.SortAscending
                             ? query.OrderBy(u => u.FirstName).ThenBy(u => u.LastName)
                             : query.OrderByDescending(u => u.FirstName).ThenByDescending(u => u.LastName),
-                        "email" => filterParams.SortAscending 
+                        "email" => filterParams.SortAscending
                             ? query.OrderBy(u => u.Email)
                             : query.OrderByDescending(u => u.Email),
-                        "username" => filterParams.SortAscending 
+                        "username" => filterParams.SortAscending
                             ? query.OrderBy(u => u.Username)
                             : query.OrderByDescending(u => u.Username),
-                        "role" => filterParams.SortAscending 
+                        "role" => filterParams.SortAscending
                             ? query.OrderBy(u => u.Role)
                             : query.OrderByDescending(u => u.Role),
-                        "department" => filterParams.SortAscending 
+                        "department" => filterParams.SortAscending
                             ? query.OrderBy(u => u.Department)
                             : query.OrderByDescending(u => u.Department),
-                        "created" => filterParams.SortAscending 
+                        "created" => filterParams.SortAscending
                             ? query.OrderBy(u => u.CreatedDate)
                             : query.OrderByDescending(u => u.CreatedDate),
-                        _ => filterParams.SortAscending 
+                        _ => filterParams.SortAscending
                             ? query.OrderBy(u => u.Id)
                             : query.OrderByDescending(u => u.Id)
                     };
@@ -116,8 +117,8 @@ namespace TeamTasker.API.Controllers
 
                 // Execute query with pagination
                 var paginatedUsers = await PaginatedList<User>.CreateAsync(
-                    query, 
-                    filterParams.PageNumber, 
+                    query,
+                    filterParams.PageNumber,
                     filterParams.PageSize);
 
                 // Map to DTOs
@@ -173,9 +174,13 @@ namespace TeamTasker.API.Controllers
                 }
 
                 // Load user skills
-                await _dbContext.Entry(user)
-                    .Collection(u => u.Skills)
-                    .LoadAsync();
+                var dbContext = _dbContext as DbContext;
+                if (dbContext != null)
+                {
+                    await dbContext.Entry(user)
+                        .Collection(u => u.Skills)
+                        .LoadAsync();
+                }
 
                 // Map to DTO
                 var userDto = new UserDetailDto

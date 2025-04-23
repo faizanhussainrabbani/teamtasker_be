@@ -10,11 +10,11 @@ namespace TeamTasker.Application.Users.Models
         /// <summary>
         /// Filter by role
         /// </summary>
-        public string Role { get; set; }
-        
+        public string? Role { get; set; }
+
         /// <summary>
         /// Filter by department
         /// </summary>
-        public string Department { get; set; }
+        public string? Department { get; set; }
     }
 }
