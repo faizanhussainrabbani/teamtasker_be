@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using TeamTasker.Application.Common.Models;
 using TeamTasker.Application.Projects.Commands.CreateProject;
 using TeamTasker.Application.Projects.Commands.DeleteProject;
 using TeamTasker.Application.Projects.Commands.UpdateProject;
@@ -16,14 +17,28 @@ namespace TeamTasker.API.Controllers
     public class ProjectsController : ApiControllerBase
     {
         /// <summary>
-        /// Get all projects
+        /// Get projects with pagination and filtering
         /// </summary>
-        /// <returns>List of projects</returns>
+        /// <param name="pageNumber">Page number (1-based)</param>
+        /// <param name="pageSize">Number of items per page</param>
+        /// <param name="searchTerm">Optional search term to filter projects by name or description</param>
+        /// <param name="status">Optional status filter</param>
+        /// <returns>Paginated list of projects</returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<List<ProjectDto>>> GetProjects()
+        public async Task<ActionResult<PaginatedList<ProjectDto>>> GetProjects(
+            [FromQuery] int pageNumber = 1,
+            [FromQuery] int pageSize = 10,
+            [FromQuery] string searchTerm = null,
+            [FromQuery] string status = null)
         {
-            return await Mediator.Send(new GetProjectsQuery());
+            return await Mediator.Send(new GetProjectsQuery
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                SearchTerm = searchTerm,
+                Status = status
+            });
         }
 
         /// <summary>

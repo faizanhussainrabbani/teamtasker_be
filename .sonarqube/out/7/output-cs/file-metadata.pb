@@ -1,0 +1,11 @@
+æ
+≤/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/src/Presentation/TeamTasker.API/obj/Debug/net8.0/TeamTasker.API.MvcApplicationPartsAssemblyInfo.csutf-8´
+ü/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/src/Presentation/TeamTasker.API/obj/Debug/net8.0/TeamTasker.API.AssemblyInfo.csutf-8ª
+Ø/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/src/Presentation/TeamTasker.API/obj/Debug/net8.0/.NETCoreApp,Version=v8.0.AssemblyAttributes.csutf-8≠
+°/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/src/Presentation/TeamTasker.API/obj/Debug/net8.0/TeamTasker.API.GlobalUsings.g.csutf-8É
+z/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/src/Presentation/TeamTasker.API/Program.csutf-8£
+ô/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/src/Presentation/TeamTasker.API/Middleware/ExceptionHandlingMiddleware.csutf-8†
+ñ/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/src/Presentation/TeamTasker.API/Filters/ApiExceptionFilterAttribute.csutf-8ú
+í/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/src/Presentation/TeamTasker.API/Extensions/MiddlewareExtensions.csutf-8ö
+ê/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/src/Presentation/TeamTasker.API/Controllers/ApiControllerBase.csutf-8õ
+ë/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/src/Presentation/TeamTasker.API/Controllers/ProjectsController.csutf-8

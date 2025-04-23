@@ -1,0 +1,9 @@
+ 
+æ/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/tests/TeamTasker.Infrastructure.UnitTests/obj/Debug/net8.0/TeamTasker.Infrastructure.UnitTests.AssemblyInfo.csutf-8≈
+π/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/tests/TeamTasker.Infrastructure.UnitTests/obj/Debug/net8.0/.NETCoreApp,Version=v8.0.AssemblyAttributes.csutf-8Ã
+¿/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/tests/TeamTasker.Infrastructure.UnitTests/obj/Debug/net8.0/TeamTasker.Infrastructure.UnitTests.GlobalUsings.g.csutf-8É
+x/Users/faizanhussain/.nuget/packages/microsoft.net.test.sdk/17.8.0/build/netcoreapp3.1/Microsoft.NET.Test.Sdk.Program.csutf-8ê
+Ü/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/tests/TeamTasker.Infrastructure.UnitTests/UnitTest1.csutf-8ß
+ù/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/tests/TeamTasker.Infrastructure.UnitTests/Repositories/TaskRepositoryTests.csutf-8™
+†/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/tests/TeamTasker.Infrastructure.UnitTests/Repositories/ProjectRepositoryTests.csutf-8ù
+ì/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/tests/TeamTasker.Infrastructure.UnitTests/Data/EfRepositoryTests.csutf-8

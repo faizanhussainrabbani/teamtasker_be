@@ -1,0 +1,11 @@
+µ
+©/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/src/Core/TeamTasker.SharedKernel/obj/Debug/net8.0/TeamTasker.SharedKernel.AssemblyInfo.csutf-8º
+∞/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/src/Core/TeamTasker.SharedKernel/obj/Debug/net8.0/.NETCoreApp,Version=v8.0.AssemblyAttributes.csutf-8∑
+´/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/src/Core/TeamTasker.SharedKernel/obj/Debug/net8.0/TeamTasker.SharedKernel.GlobalUsings.g.csutf-8à
+/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/src/Core/TeamTasker.SharedKernel/ValueObject.csutf-8ó
+ç/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/src/Core/TeamTasker.SharedKernel/Interfaces/ISpecification.csutf-8î
+ä/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/src/Core/TeamTasker.SharedKernel/Interfaces/IRepository.csutf-8ü
+ï/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/src/Core/TeamTasker.SharedKernel/Interfaces/IDomainEventDispatcher.csutf-8É
+z/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/src/Core/TeamTasker.SharedKernel/Class1.csutf-8è
+Ö/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/src/Core/TeamTasker.SharedKernel/BaseSpecification.csutf-8á
+~/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/src/Core/TeamTasker.SharedKernel/BaseEntity.csutf-8

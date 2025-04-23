@@ -1,3 +1,5 @@
+using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -28,14 +30,33 @@ namespace TeamTasker.Application.Common.Behaviors
             var requestName = typeof(TRequest).Name;
             var userId = _currentUserService.UserId ?? 0;
             var userName = _currentUserService.Username ?? "Anonymous";
+            var requestId = Guid.NewGuid().ToString();
 
-            _logger.LogInformation("Handling {RequestName} for {UserId} {UserName}", requestName, userId, userName);
+            _logger.LogInformation("[{RequestId}] Handling {RequestName} for {UserId} {UserName}",
+                requestId, requestName, userId, userName);
 
-            var response = await next();
+            var stopwatch = Stopwatch.StartNew();
 
-            _logger.LogInformation("Handled {RequestName} for {UserId} {UserName}", requestName, userId, userName);
+            try
+            {
+                var response = await next(cancellationToken);
 
-            return response;
+                stopwatch.Stop();
+
+                _logger.LogInformation("[{RequestId}] Handled {RequestName} for {UserId} {UserName} in {ElapsedMilliseconds}ms",
+                    requestId, requestName, userId, userName, stopwatch.ElapsedMilliseconds);
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                stopwatch.Stop();
+
+                _logger.LogError(ex, "[{RequestId}] Error handling {RequestName} for {UserId} {UserName} after {ElapsedMilliseconds}ms",
+                    requestId, requestName, userId, userName, stopwatch.ElapsedMilliseconds);
+
+                throw;
+            }
         }
     }
 }
