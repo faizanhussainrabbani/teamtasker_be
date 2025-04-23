@@ -1,0 +1,29 @@
+version: '3.4'
+
+services:
+  teamtasker.api:
+    image: ${DOCKER_REGISTRY-}teamtaskerapi
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5000:80"
+      - "7000:443"
+    depends_on:
+      - db
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=db;Database=TeamTaskerDb;User=sa;Password=Your_password123;TrustServerCertificate=True;
+
+  db:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Your_password123
+    ports:
+      - "1433:1433"
+    volumes:
+      - teamtasker-sqldata:/var/opt/mssql
+
+volumes:
+  teamtasker-sqldata:
