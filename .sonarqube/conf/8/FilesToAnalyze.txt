@@ -1,8 +1,0 @@
-﻿/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/tests/TeamTasker.API.UnitTests/Controllers/ProjectsControllerTests.cs
-/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/tests/TeamTasker.API.UnitTests/UnitTest1.cs
-/Users/faizanhussain/.nuget/packages/microsoft.net.test.sdk/17.8.0/build/netcoreapp3.1/Microsoft.NET.Test.Sdk.Program.cs
-/Users/faizanhussain/.nuget/packages/xunit.runner.visualstudio/2.5.3/build/net6.0/xunit.runner.visualstudio.dotnetcore.testadapter.dll
-/Users/faizanhussain/.nuget/packages/xunit.runner.visualstudio/2.5.3/build/net6.0/xunit.runner.reporters.netcoreapp10.dll
-/Users/faizanhussain/.nuget/packages/xunit.runner.visualstudio/2.5.3/build/net6.0/xunit.runner.utility.netcoreapp10.dll
-/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/tests/TeamTasker.API.UnitTests/TestResults/1fc0dcf7-61e9-40a2-ba4e-d4cabcc6364d/coverage.cobertura.xml
-/Users/faizanhussain/Documents/Project/Practice/TeamTasker/02Code/teamtasker_be/tests/TeamTasker.API.UnitTests/TestResults/67b863ad-2d99-415e-8c34-33c6a0887d3a/coverage.cobertura.xml
