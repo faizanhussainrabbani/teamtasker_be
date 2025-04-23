@@ -32,4 +32,26 @@ namespace TeamTasker.Domain.Events
             Project = project;
         }
     }
+
+    public class ProjectAssignedToTeamEvent : INotification
+    {
+        public Project Project { get; }
+        public int TeamId { get; }
+
+        public ProjectAssignedToTeamEvent(Project project, int teamId)
+        {
+            Project = project;
+            TeamId = teamId;
+        }
+    }
+
+    public class ProjectRemovedFromTeamEvent : INotification
+    {
+        public Project Project { get; }
+
+        public ProjectRemovedFromTeamEvent(Project project)
+        {
+            Project = project;
+        }
+    }
 }

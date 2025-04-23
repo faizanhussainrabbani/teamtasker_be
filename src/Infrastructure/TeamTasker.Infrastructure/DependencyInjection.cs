@@ -1,9 +1,14 @@
 using System;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using TeamTasker.Application.Common.Interfaces;
+using TeamTasker.Application.Common.Models;
 using TeamTasker.Domain.Interfaces;
+using TeamTasker.Infrastructure.Authentication;
 using TeamTasker.Infrastructure.Data;
 using TeamTasker.Infrastructure.Repositories;
 using TeamTasker.Infrastructure.Services;
@@ -34,6 +39,35 @@ namespace TeamTasker.Infrastructure
 
             // Register services
             services.AddScoped<ICurrentUserService, CurrentUserService>();
+
+            // Register JWT services
+            var jwtSettings = new JwtSettings();
+            configuration.GetSection("JwtSettings").Bind(jwtSettings);
+            services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
+            services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
+            services.AddSingleton<IPasswordHasher, PasswordHasher>();
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.SaveToken = true;
+                options.RequireHttpsMetadata = false;
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = jwtSettings.Issuer,
+                    ValidAudience = jwtSettings.Audience,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Secret))
+                };
+            });
 
             return services;
         }

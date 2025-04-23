@@ -27,6 +27,19 @@ namespace TeamTasker.Infrastructure.Data.Configurations
 
             builder.Property(t => t.CreatedDate)
                 .IsRequired();
+
+            builder.Property(t => t.UpdatedDate)
+                .IsRequired();
+
+            builder.Property(t => t.Progress)
+                .IsRequired();
+
+            // Configure relationship with User (Assignee)
+            builder.HasOne(t => t.AssignedToUser)
+                .WithMany(u => u.AssignedTasks)
+                .HasForeignKey(t => t.AssignedToUserId)
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

@@ -24,9 +24,16 @@ namespace TeamTasker.Infrastructure.Data.Configurations
                 .IsRequired();
 
             builder.HasMany(p => p.Tasks)
-                .WithOne()
+                .WithOne(t => t.Project)
                 .HasForeignKey(t => t.ProjectId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            // Configure relationship with Team
+            builder.HasOne(p => p.Team)
+                .WithMany(t => t.Projects)
+                .HasForeignKey(p => p.TeamId)
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

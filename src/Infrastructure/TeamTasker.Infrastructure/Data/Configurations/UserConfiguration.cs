@@ -42,27 +42,59 @@ namespace TeamTasker.Infrastructure.Data.Configurations
             builder.Property(u => u.CreatedDate)
                 .IsRequired();
 
+            builder.Property(u => u.UpdatedDate)
+                .IsRequired();
+
+            builder.Property(u => u.PasswordHash)
+                .HasMaxLength(255);
+
+            builder.Property(u => u.Role)
+                .HasMaxLength(50);
+
+            builder.Property(u => u.Avatar)
+                .HasMaxLength(255);
+
+            builder.Property(u => u.Initials)
+                .HasMaxLength(10);
+
+            builder.Property(u => u.Department)
+                .HasMaxLength(100);
+
+            builder.Property(u => u.Bio)
+                .HasMaxLength(500);
+
+            builder.Property(u => u.Location)
+                .HasMaxLength(100);
+
+            builder.Property(u => u.Phone)
+                .HasMaxLength(20);
+
             builder.OwnsOne(u => u.Address, a =>
             {
                 a.Property(p => p.Street)
                     .HasMaxLength(100)
-                    .HasColumnName("Street");
+                    .HasColumnName("Street")
+                    .IsRequired(false);
 
                 a.Property(p => p.City)
                     .HasMaxLength(50)
-                    .HasColumnName("City");
+                    .HasColumnName("City")
+                    .IsRequired(false);
 
                 a.Property(p => p.State)
                     .HasMaxLength(50)
-                    .HasColumnName("State");
+                    .HasColumnName("State")
+                    .IsRequired(false);
 
                 a.Property(p => p.Country)
                     .HasMaxLength(50)
-                    .HasColumnName("Country");
+                    .HasColumnName("Country")
+                    .IsRequired(false);
 
                 a.Property(p => p.ZipCode)
                     .HasMaxLength(20)
-                    .HasColumnName("ZipCode");
+                    .HasColumnName("ZipCode")
+                    .IsRequired(false);
             });
         }
     }
