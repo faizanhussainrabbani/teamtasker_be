@@ -9,6 +9,7 @@ using TeamTasker.Domain.Entities;
 using TeamTasker.Infrastructure.Data;
 using TeamTasker.SharedKernel.Interfaces;
 using Xunit;
+using Task = System.Threading.Tasks.Task;
 
 namespace TeamTasker.Infrastructure.UnitTests.Data
 {
@@ -23,7 +24,7 @@ namespace TeamTasker.Infrastructure.UnitTests.Data
                 .Options;
 
             var domainEventDispatcher = Substitute.For<IDomainEventDispatcher>();
-            
+
             // Create and seed the database
             using (var context = new ApplicationDbContext(options, domainEventDispatcher))
             {
@@ -36,7 +37,7 @@ namespace TeamTasker.Infrastructure.UnitTests.Data
             using (var context = new ApplicationDbContext(options, domainEventDispatcher))
             {
                 var repository = new EfRepository<Project>(context);
-                
+
                 // Act
                 var result = await repository.GetByIdAsync(1);
 
@@ -56,11 +57,11 @@ namespace TeamTasker.Infrastructure.UnitTests.Data
                 .Options;
 
             var domainEventDispatcher = Substitute.For<IDomainEventDispatcher>();
-            
+
             using (var context = new ApplicationDbContext(options, domainEventDispatcher))
             {
                 var repository = new EfRepository<Project>(context);
-                
+
                 // Act
                 var result = await repository.GetByIdAsync(999);
 
@@ -78,7 +79,7 @@ namespace TeamTasker.Infrastructure.UnitTests.Data
                 .Options;
 
             var domainEventDispatcher = Substitute.For<IDomainEventDispatcher>();
-            
+
             // Create and seed the database
             using (var context = new ApplicationDbContext(options, domainEventDispatcher))
             {
@@ -92,7 +93,7 @@ namespace TeamTasker.Infrastructure.UnitTests.Data
             using (var context = new ApplicationDbContext(options, domainEventDispatcher))
             {
                 var repository = new EfRepository<Project>(context);
-                
+
                 // Act
                 var result = await repository.ListAllAsync();
 
@@ -113,11 +114,11 @@ namespace TeamTasker.Infrastructure.UnitTests.Data
 
             var domainEventDispatcher = Substitute.For<IDomainEventDispatcher>();
             var project = new Project("Test Project", "Test Description", DateTime.UtcNow, DateTime.UtcNow.AddDays(30));
-            
+
             using (var context = new ApplicationDbContext(options, domainEventDispatcher))
             {
                 var repository = new EfRepository<Project>(context);
-                
+
                 // Act
                 await repository.AddAsync(project);
             }
@@ -142,7 +143,7 @@ namespace TeamTasker.Infrastructure.UnitTests.Data
 
             var domainEventDispatcher = Substitute.For<IDomainEventDispatcher>();
             var project = new Project("Old Name", "Old Description", DateTime.UtcNow, DateTime.UtcNow.AddDays(10));
-            
+
             // Create and seed the database
             using (var context = new ApplicationDbContext(options, domainEventDispatcher))
             {
@@ -156,7 +157,7 @@ namespace TeamTasker.Infrastructure.UnitTests.Data
                 var repository = new EfRepository<Project>(context);
                 var projectToUpdate = await context.Projects.FirstAsync();
                 projectToUpdate.UpdateDetails("New Name", "New Description", DateTime.UtcNow.AddDays(5), DateTime.UtcNow.AddDays(30));
-                
+
                 // Act
                 await repository.UpdateAsync(projectToUpdate);
             }
@@ -181,7 +182,7 @@ namespace TeamTasker.Infrastructure.UnitTests.Data
 
             var domainEventDispatcher = Substitute.For<IDomainEventDispatcher>();
             var project = new Project("Test Project", "Test Description", DateTime.UtcNow, DateTime.UtcNow.AddDays(30));
-            
+
             // Create and seed the database
             using (var context = new ApplicationDbContext(options, domainEventDispatcher))
             {
@@ -194,7 +195,7 @@ namespace TeamTasker.Infrastructure.UnitTests.Data
             {
                 var repository = new EfRepository<Project>(context);
                 var projectToDelete = await context.Projects.FirstAsync();
-                
+
                 // Act
                 await repository.DeleteAsync(projectToDelete);
             }

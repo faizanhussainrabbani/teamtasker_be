@@ -14,6 +14,7 @@ using TeamTasker.Application.Projects.Commands.UpdateProject;
 using TeamTasker.Application.Projects.Queries.GetProjectById;
 using TeamTasker.Application.Projects.Queries.GetProjects;
 using Xunit;
+using Task = System.Threading.Tasks.Task;
 
 namespace TeamTasker.API.UnitTests.Controllers
 {
@@ -26,9 +27,9 @@ namespace TeamTasker.API.UnitTests.Controllers
         {
             _mediator = Substitute.For<ISender>();
             _controller = new ProjectsController();
-            
+
             // Use reflection to set the private _mediator field
-            var mediatorField = typeof(ProjectsController).BaseType.GetField("_mediator", 
+            var mediatorField = typeof(ProjectsController).BaseType.GetField("_mediator",
                 System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
             mediatorField.SetValue(_controller, _mediator);
         }
@@ -52,7 +53,7 @@ namespace TeamTasker.API.UnitTests.Controllers
             // Assert
             var okResult = result.Result.Should().BeOfType<OkObjectResult>().Subject;
             var returnValue = okResult.Value.Should().BeAssignableTo<List<ProjectDto>>().Subject;
-            
+
             returnValue.Should().HaveCount(2);
             returnValue[0].Id.Should().Be(1);
             returnValue[0].Name.Should().Be("Project 1");
@@ -86,7 +87,7 @@ namespace TeamTasker.API.UnitTests.Controllers
             // Assert
             var okResult = result.Result.Should().BeOfType<OkObjectResult>().Subject;
             var returnValue = okResult.Value.Should().BeAssignableTo<ProjectDetailDto>().Subject;
-            
+
             returnValue.Id.Should().Be(projectId);
             returnValue.Name.Should().Be("Test Project");
             returnValue.Tasks.Should().HaveCount(2);

@@ -2,6 +2,7 @@ using System;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using TeamTasker.Application.Common.Interfaces;
+using System.Linq;
 
 namespace TeamTasker.Infrastructure.Services
 {
@@ -21,12 +22,12 @@ namespace TeamTasker.Infrastructure.Services
         {
             get
             {
-                var userId = _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
+                var userId = _httpContextAccessor.HttpContext?.User?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
                 return !string.IsNullOrEmpty(userId) ? int.Parse(userId) : null;
             }
         }
 
-        public string Username => _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.Name);
+        public string Username => _httpContextAccessor.HttpContext?.User?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
 
         public bool IsAuthenticated => _httpContextAccessor.HttpContext?.User?.Identity?.IsAuthenticated ?? false;
     }
