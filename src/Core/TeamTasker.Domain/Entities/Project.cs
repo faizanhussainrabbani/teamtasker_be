@@ -19,8 +19,8 @@ namespace TeamTasker.Domain.Entities
             StartDate = startDate;
             EndDate = endDate;
             Status = ProjectStatus.NotStarted;
-            Tasks = new List<Task>();
-            
+            Tasks = new List<Entities.Task>();
+
             AddDomainEvent(new ProjectCreatedEvent(this));
         }
 
@@ -29,7 +29,7 @@ namespace TeamTasker.Domain.Entities
         public DateTime StartDate { get; private set; }
         public DateTime? EndDate { get; private set; }
         public ProjectStatus Status { get; private set; }
-        public List<Task> Tasks { get; private set; }
+        public List<Entities.Task> Tasks { get; private set; }
 
         public void UpdateDetails(string name, string description, DateTime startDate, DateTime? endDate)
         {
@@ -37,24 +37,24 @@ namespace TeamTasker.Domain.Entities
             Description = description;
             StartDate = startDate;
             EndDate = endDate;
-            
+
             AddDomainEvent(new ProjectUpdatedEvent(this));
         }
 
         public void UpdateStatus(ProjectStatus status)
         {
             Status = status;
-            
+
             AddDomainEvent(new ProjectStatusUpdatedEvent(this));
         }
 
-        public Task AddTask(string title, string description, DateTime dueDate, TaskPriority priority)
+        public Entities.Task AddTask(string title, string description, DateTime dueDate, TaskPriority priority)
         {
-            var task = new Task(title, description, dueDate, priority, this.Id);
+            var task = new Entities.Task(title, description, dueDate, priority, this.Id);
             Tasks.Add(task);
-            
+
             AddDomainEvent(new TaskAddedToProjectEvent(task, this));
-            
+
             return task;
         }
     }

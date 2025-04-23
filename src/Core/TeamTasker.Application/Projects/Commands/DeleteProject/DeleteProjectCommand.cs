@@ -4,6 +4,7 @@ using MediatR;
 using TeamTasker.Application.Common.Exceptions;
 using TeamTasker.Domain.Entities;
 using TeamTasker.Domain.Interfaces;
+using Task = System.Threading.Tasks.Task;
 
 namespace TeamTasker.Application.Projects.Commands.DeleteProject
 {

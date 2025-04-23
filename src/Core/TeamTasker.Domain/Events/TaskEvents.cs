@@ -5,64 +5,64 @@ namespace TeamTasker.Domain.Events
 {
     public class TaskCreatedEvent : INotification
     {
-        public Task Task { get; }
+        public Entities.Task TaskItem { get; }
 
-        public TaskCreatedEvent(Task task)
+        public TaskCreatedEvent(Entities.Task task)
         {
-            Task = task;
+            TaskItem = task;
         }
     }
 
     public class TaskUpdatedEvent : INotification
     {
-        public Task Task { get; }
+        public Entities.Task TaskItem { get; }
 
-        public TaskUpdatedEvent(Task task)
+        public TaskUpdatedEvent(Entities.Task task)
         {
-            Task = task;
+            TaskItem = task;
         }
     }
 
     public class TaskStatusUpdatedEvent : INotification
     {
-        public Task Task { get; }
+        public Entities.Task TaskItem { get; }
 
-        public TaskStatusUpdatedEvent(Task task)
+        public TaskStatusUpdatedEvent(Entities.Task task)
         {
-            Task = task;
+            TaskItem = task;
         }
     }
 
     public class TaskAssignedEvent : INotification
     {
-        public Task Task { get; }
+        public Entities.Task TaskItem { get; }
         public int UserId { get; }
 
-        public TaskAssignedEvent(Task task, int userId)
+        public TaskAssignedEvent(Entities.Task task, int userId)
         {
-            Task = task;
+            TaskItem = task;
             UserId = userId;
         }
     }
 
     public class TaskUnassignedEvent : INotification
     {
-        public Task Task { get; }
+        public Entities.Task TaskItem { get; }
 
-        public TaskUnassignedEvent(Task task)
+        public TaskUnassignedEvent(Entities.Task task)
         {
-            Task = task;
+            TaskItem = task;
         }
     }
 
     public class TaskAddedToProjectEvent : INotification
     {
-        public Task Task { get; }
+        public Entities.Task TaskItem { get; }
         public Project Project { get; }
 
-        public TaskAddedToProjectEvent(Task task, Project project)
+        public TaskAddedToProjectEvent(Entities.Task task, Project project)
         {
-            Task = task;
+            TaskItem = task;
             Project = project;
         }
     }
