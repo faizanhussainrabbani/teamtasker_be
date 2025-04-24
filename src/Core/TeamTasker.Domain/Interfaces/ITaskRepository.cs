@@ -94,6 +94,8 @@ namespace TeamTasker.Domain.Interfaces
         /// <param name="pageSize">Page size</param>
         /// <param name="sortBy">Sort by field</param>
         /// <param name="sortDirection">Sort direction</param>
+        /// <param name="currentUserId">Current user ID for filtering by task type</param>
+        /// <param name="taskType">Task type (my, team)</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>List of tasks</returns>
         Task<(List<DomainTask> Tasks, int TotalCount)> GetFilteredTasksAsync(
@@ -108,6 +110,8 @@ namespace TeamTasker.Domain.Interfaces
             int pageSize = 10,
             string? sortBy = null,
             string sortDirection = "asc",
+            int? currentUserId = null,
+            string? taskType = null,
             CancellationToken cancellationToken = default);
     }
 }

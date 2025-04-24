@@ -59,7 +59,14 @@ namespace TeamTasker.API.Controllers
         {
             try
             {
-                _logger.LogInformation("Getting tasks with filters");
+                _logger.LogInformation("Getting tasks with filters. TaskType: {TaskType}", filterParams.TaskType);
+
+                // Get current user ID
+                var currentUserId = _currentUserService.UserId;
+                if (currentUserId == null)
+                {
+                    return Unauthorized(new { message = "Invalid token" });
+                }
 
                 // Parse status and priority
                 DomainTaskStatus? status = null;
@@ -125,7 +132,9 @@ namespace TeamTasker.API.Controllers
                     filterParams.PageNumber,
                     filterParams.PageSize,
                     filterParams.SortBy,
-                    filterParams.SortDirection ?? "asc");
+                    filterParams.SortDirection ?? "asc",
+                    currentUserId.Value,
+                    filterParams.TaskType);
 
                 // Map to DTOs
                 var taskDtos = tasks.Select(t => new TaskDto
@@ -146,6 +155,14 @@ namespace TeamTasker.API.Controllers
                         Name = $"{t.AssignedToUser.FirstName} {t.AssignedToUser.LastName}",
                         Avatar = t.AssignedToUser.Avatar,
                         Initials = t.AssignedToUser.Initials
+                    } : null,
+                    CreatorId = t.CreatorId,
+                    Creator = filterParams.IncludeCreator && t.Creator != null ? new UserMinimalDto
+                    {
+                        Id = t.Creator.Id,
+                        Name = $"{t.Creator.FirstName} {t.Creator.LastName}",
+                        Avatar = t.Creator.Avatar,
+                        Initials = t.Creator.Initials
                     } : null,
                     Tags = t.Tags.Select(tt => tt.Tag).ToList(),
                     CreatedDate = t.CreatedDate,

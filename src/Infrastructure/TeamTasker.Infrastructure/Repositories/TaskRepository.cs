@@ -163,13 +163,52 @@ namespace TeamTasker.Infrastructure.Repositories
             int pageSize = 10,
             string? sortBy = null,
             string sortDirection = "asc",
+            int? currentUserId = null,
+            string? taskType = null,
             CancellationToken cancellationToken = default)
         {
-            _logger.LogInformation("Getting filtered tasks");
+            _logger.LogInformation("Getting filtered tasks with type {TaskType}", taskType);
 
             var query = _dbContext.Tasks.AsQueryable();
 
-            // Apply filters
+            // Apply task type filter
+            if (currentUserId.HasValue && !string.IsNullOrEmpty(taskType))
+            {
+                switch (taskType.ToLower())
+                {
+                    case "my":
+                        // My tasks - assigned to the current user
+                        query = query.Where(t => t.AssignedToUserId == currentUserId.Value);
+                        break;
+                    case "team":
+                        // Team tasks - tasks assigned to users in the same teams as the current user
+                        // First, get the teams the current user is a member of
+                        var userTeamIds = _dbContext.TeamMembers
+                            .Where(tm => tm.UserId == currentUserId.Value)
+                            .Select(tm => tm.TeamId);
+
+                        // Then, get the user IDs of all members in those teams
+                        var teamMemberIds = _dbContext.TeamMembers
+                            .Where(tm => userTeamIds.Contains(tm.TeamId))
+                            .Select(tm => tm.UserId);
+
+                        // Finally, get tasks assigned to those users (excluding the current user's tasks)
+                        query = query.Where(t => t.AssignedToUserId.HasValue &&
+                                               teamMemberIds.Contains(t.AssignedToUserId.Value) &&
+                                               t.AssignedToUserId != currentUserId.Value);
+                        break;
+                    case "created":
+                        // Tasks created by the current user
+                        query = query.Where(t => t.CreatorId == currentUserId.Value);
+                        break;
+                    case "unassigned":
+                        // Unassigned tasks
+                        query = query.Where(t => !t.AssignedToUserId.HasValue);
+                        break;
+                }
+            }
+
+            // Apply status filter
             if (status.HasValue)
             {
                 query = query.Where(t => t.Status == status.Value);
