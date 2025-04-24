@@ -34,9 +34,11 @@ namespace TeamTasker.Domain.Entities
         public TaskStatus Status { get; private set; }
         public int Progress { get; private set; }
         public int ProjectId { get; private set; }
-        public Project Project { get; private set; }
+        public Project? Project { get; private set; }
         public int? AssignedToUserId { get; private set; }
-        public User AssignedToUser { get; private set; }
+        public User? AssignedToUser { get; private set; }
+        public int CreatorId { get; set; } // Allow setting for now
+        public User? Creator { get; private set; }
         public DateTime CreatedDate { get; private set; }
         public DateTime UpdatedDate { get; private set; }
         public DateTime? CompletedDate { get; private set; }
