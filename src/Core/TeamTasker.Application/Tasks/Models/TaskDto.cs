@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace TeamTasker.Application.Tasks.Models
 {
@@ -54,14 +55,15 @@ namespace TeamTasker.Application.Tasks.Models
         public string ProjectName { get; set; }
 
         /// <summary>
-        /// Assignee ID (User ID)
-        /// </summary>
-        public int? AssigneeId { get; set; }
-
-        /// <summary>
         /// Assignee Team Member ID
         /// </summary>
         public int? AssigneeTeamMemberId { get; set; }
+
+        /// <summary>
+        /// Assignee ID (User ID) - Deprecated, use AssigneeTeamMemberId instead
+        /// </summary>
+        [Obsolete("Use AssigneeTeamMemberId instead")]
+        public int? AssigneeId { get; set; }
 
         /// <summary>
         /// Assignee information
@@ -69,14 +71,15 @@ namespace TeamTasker.Application.Tasks.Models
         public UserMinimalDto Assignee { get; set; }
 
         /// <summary>
-        /// Creator ID (User ID)
-        /// </summary>
-        public int CreatorId { get; set; }
-
-        /// <summary>
         /// Creator Team Member ID
         /// </summary>
         public int? CreatorTeamMemberId { get; set; }
+
+        /// <summary>
+        /// Creator ID (User ID) - Deprecated, use CreatorTeamMemberId instead
+        /// </summary>
+        [Obsolete("Use CreatorTeamMemberId instead")]
+        public int CreatorId { get; set; }
 
         /// <summary>
         /// Creator information

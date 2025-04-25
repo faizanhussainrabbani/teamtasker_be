@@ -250,16 +250,38 @@ namespace TeamTasker.API.Controllers
                     Progress = task.Progress,
                     ProjectId = task.ProjectId,
                     ProjectName = task.Project?.Name,
-                    AssigneeId = task.AssignedToUserId,
-                    Assignee = task.AssignedToUser != null ? new TeamTasker.Application.Tasks.Models.UserMinimalDto
+                    // Prefer team member information if available
+                    AssigneeTeamMemberId = task.AssignedToTeamMemberId,
+                    AssigneeId = task.AssignedToTeamMember?.UserId ?? task.AssignedToUserId,
+                    Assignee = task.AssignedToTeamMember?.User != null ? new TeamTasker.Application.Tasks.Models.UserMinimalDto
+                    {
+                        Id = task.AssignedToTeamMember.User.Id,
+                        Name = $"{task.AssignedToTeamMember.User.FirstName} {task.AssignedToTeamMember.User.LastName}",
+                        Avatar = task.AssignedToTeamMember.User.Avatar,
+                        Initials = task.AssignedToTeamMember.User.Initials,
+                        TeamMemberId = task.AssignedToTeamMemberId,
+                        TeamId = task.AssignedToTeamMember.TeamId,
+                        TeamRole = task.AssignedToTeamMember.Role
+                    } : task.AssignedToUser != null ? new TeamTasker.Application.Tasks.Models.UserMinimalDto
                     {
                         Id = task.AssignedToUser.Id,
                         Name = $"{task.AssignedToUser.FirstName} {task.AssignedToUser.LastName}",
                         Avatar = task.AssignedToUser.Avatar,
                         Initials = task.AssignedToUser.Initials
                     } : null,
-                    CreatorId = task.CreatorId,
-                    Creator = task.Creator != null ? new TeamTasker.Application.Tasks.Models.UserMinimalDto
+                    // Prefer team member information if available
+                    CreatorTeamMemberId = task.CreatorTeamMemberId,
+                    CreatorId = task.CreatorTeamMember?.UserId ?? task.CreatorId,
+                    Creator = task.CreatorTeamMember?.User != null ? new TeamTasker.Application.Tasks.Models.UserMinimalDto
+                    {
+                        Id = task.CreatorTeamMember.User.Id,
+                        Name = $"{task.CreatorTeamMember.User.FirstName} {task.CreatorTeamMember.User.LastName}",
+                        Avatar = task.CreatorTeamMember.User.Avatar,
+                        Initials = task.CreatorTeamMember.User.Initials,
+                        TeamMemberId = task.CreatorTeamMemberId,
+                        TeamId = task.CreatorTeamMember.TeamId,
+                        TeamRole = task.CreatorTeamMember.Role
+                    } : task.Creator != null ? new TeamTasker.Application.Tasks.Models.UserMinimalDto
                     {
                         Id = task.Creator.Id,
                         Name = $"{task.Creator.FirstName} {task.Creator.LastName}",
@@ -388,19 +410,15 @@ namespace TeamTasker.API.Controllers
                     priority,
                     request.ProjectId);
 
-                // Set creator ID using reflection since the property is not accessible through the constructor
+                // Ensure the creator has a team membership and set it on the task
+                var creatorTeamMemberId = await _teamMemberRepository.EnsureUserHasTeamMembershipAsync(currentUserId.Value);
+                task.SetCreatorTeamMember(creatorTeamMemberId);
+
+                // For backward compatibility, also set the creator ID directly
                 var creatorIdProperty = typeof(Domain.Entities.Task).GetProperty("CreatorId");
                 if (creatorIdProperty != null)
                 {
                     creatorIdProperty.SetValue(task, currentUserId.Value);
-                }
-
-                // Find the team member for the current user (creator)
-                var creatorTeamMembers = await _teamMemberRepository.GetByUserIdAsync(currentUserId.Value);
-                if (creatorTeamMembers.Any())
-                {
-                    // Set creator team member ID (using the first team membership)
-                    task.SetCreatorTeamMember(creatorTeamMembers.First().Id);
                 }
 
                 // Set status if different from default
@@ -414,20 +432,15 @@ namespace TeamTasker.API.Controllers
                 {
                     task.AssignToTeamMember(request.TeamMemberId.Value);
                 }
-                // Otherwise, assign to user if provided
+                // Otherwise, ensure the assignee has a team membership if AssigneeId is provided
                 else if (request.AssigneeId.HasValue)
                 {
-                    // First check if the user is a team member
-                    var assigneeTeamMembers = await _teamMemberRepository.GetByUserIdAsync(request.AssigneeId.Value);
-                    if (assigneeTeamMembers.Any())
-                    {
-                        // Use the first team membership
-                        task.AssignToTeamMember(assigneeTeamMembers.First().Id);
-                    }
-                    else
-                    {
-                        task.AssignToUser(request.AssigneeId.Value);
-                    }
+                    // Ensure the assignee has a team membership and assign the task to it
+                    var assigneeTeamMemberId = await _teamMemberRepository.EnsureUserHasTeamMembershipAsync(request.AssigneeId.Value);
+                    task.AssignToTeamMember(assigneeTeamMemberId);
+
+                    // For backward compatibility, also set the assignee ID directly
+                    task.AssignToUser(request.AssigneeId.Value);
                 }
 
                 // Save task
@@ -457,16 +470,38 @@ namespace TeamTasker.API.Controllers
                     Progress = createdTask.Progress,
                     ProjectId = createdTask.ProjectId,
                     ProjectName = createdTask.Project?.Name,
-                    AssigneeId = createdTask.AssignedToUserId,
-                    Assignee = createdTask.AssignedToUser != null ? new TeamTasker.Application.Tasks.Models.UserMinimalDto
+                    // Prefer team member information if available
+                    AssigneeTeamMemberId = createdTask.AssignedToTeamMemberId,
+                    AssigneeId = createdTask.AssignedToTeamMember?.UserId ?? createdTask.AssignedToUserId,
+                    Assignee = createdTask.AssignedToTeamMember?.User != null ? new TeamTasker.Application.Tasks.Models.UserMinimalDto
+                    {
+                        Id = createdTask.AssignedToTeamMember.User.Id,
+                        Name = $"{createdTask.AssignedToTeamMember.User.FirstName} {createdTask.AssignedToTeamMember.User.LastName}",
+                        Avatar = createdTask.AssignedToTeamMember.User.Avatar,
+                        Initials = createdTask.AssignedToTeamMember.User.Initials,
+                        TeamMemberId = createdTask.AssignedToTeamMemberId,
+                        TeamId = createdTask.AssignedToTeamMember.TeamId,
+                        TeamRole = createdTask.AssignedToTeamMember.Role
+                    } : createdTask.AssignedToUser != null ? new TeamTasker.Application.Tasks.Models.UserMinimalDto
                     {
                         Id = createdTask.AssignedToUser.Id,
                         Name = $"{createdTask.AssignedToUser.FirstName} {createdTask.AssignedToUser.LastName}",
                         Avatar = createdTask.AssignedToUser.Avatar,
                         Initials = createdTask.AssignedToUser.Initials
                     } : null,
-                    CreatorId = createdTask.CreatorId,
-                    Creator = createdTask.Creator != null ? new TeamTasker.Application.Tasks.Models.UserMinimalDto
+                    // Prefer team member information if available
+                    CreatorTeamMemberId = createdTask.CreatorTeamMemberId,
+                    CreatorId = createdTask.CreatorTeamMember?.UserId ?? createdTask.CreatorId,
+                    Creator = createdTask.CreatorTeamMember?.User != null ? new TeamTasker.Application.Tasks.Models.UserMinimalDto
+                    {
+                        Id = createdTask.CreatorTeamMember.User.Id,
+                        Name = $"{createdTask.CreatorTeamMember.User.FirstName} {createdTask.CreatorTeamMember.User.LastName}",
+                        Avatar = createdTask.CreatorTeamMember.User.Avatar,
+                        Initials = createdTask.CreatorTeamMember.User.Initials,
+                        TeamMemberId = createdTask.CreatorTeamMemberId,
+                        TeamId = createdTask.CreatorTeamMember.TeamId,
+                        TeamRole = createdTask.CreatorTeamMember.Role
+                    } : createdTask.Creator != null ? new TeamTasker.Application.Tasks.Models.UserMinimalDto
                     {
                         Id = createdTask.Creator.Id,
                         Name = $"{createdTask.Creator.FirstName} {createdTask.Creator.LastName}",
@@ -616,25 +651,19 @@ namespace TeamTasker.API.Controllers
                     }
                     else
                     {
-                        // First check if the user is a team member
-                        var assigneeTeamMembers = await _teamMemberRepository.GetByUserIdAsync(request.AssigneeId.Value);
-                        if (assigneeTeamMembers.Any())
+                        // Validate assignee
+                        var assignee = await _userRepository.GetByIdAsync(request.AssigneeId.Value);
+                        if (assignee == null)
                         {
-                            // Use the first team membership
-                            task.AssignToTeamMember(assigneeTeamMembers.First().Id);
+                            return BadRequest(new { message = "Invalid assignee ID" });
                         }
-                        else
-                        {
-                            // Validate assignee
-                            var assignee = await _userRepository.GetByIdAsync(request.AssigneeId.Value);
-                            if (assignee == null)
-                            {
-                                return BadRequest(new { message = "Invalid assignee ID" });
-                            }
 
-                            // Assign task to user
-                            task.AssignToUser(request.AssigneeId.Value);
-                        }
+                        // Ensure the assignee has a team membership and assign the task to it
+                        var assigneeTeamMemberId = await _teamMemberRepository.EnsureUserHasTeamMembershipAsync(request.AssigneeId.Value);
+                        task.AssignToTeamMember(assigneeTeamMemberId);
+
+                        // For backward compatibility, also set the assignee ID directly
+                        task.AssignToUser(request.AssigneeId.Value);
                     }
                 }
 
@@ -677,16 +706,38 @@ namespace TeamTasker.API.Controllers
                     Progress = updatedTask.Progress,
                     ProjectId = updatedTask.ProjectId,
                     ProjectName = updatedTask.Project?.Name,
-                    AssigneeId = updatedTask.AssignedToUserId,
-                    Assignee = updatedTask.AssignedToUser != null ? new TeamTasker.Application.Tasks.Models.UserMinimalDto
+                    // Prefer team member information if available
+                    AssigneeTeamMemberId = updatedTask.AssignedToTeamMemberId,
+                    AssigneeId = updatedTask.AssignedToTeamMember?.UserId ?? updatedTask.AssignedToUserId,
+                    Assignee = updatedTask.AssignedToTeamMember?.User != null ? new TeamTasker.Application.Tasks.Models.UserMinimalDto
+                    {
+                        Id = updatedTask.AssignedToTeamMember.User.Id,
+                        Name = $"{updatedTask.AssignedToTeamMember.User.FirstName} {updatedTask.AssignedToTeamMember.User.LastName}",
+                        Avatar = updatedTask.AssignedToTeamMember.User.Avatar,
+                        Initials = updatedTask.AssignedToTeamMember.User.Initials,
+                        TeamMemberId = updatedTask.AssignedToTeamMemberId,
+                        TeamId = updatedTask.AssignedToTeamMember.TeamId,
+                        TeamRole = updatedTask.AssignedToTeamMember.Role
+                    } : updatedTask.AssignedToUser != null ? new TeamTasker.Application.Tasks.Models.UserMinimalDto
                     {
                         Id = updatedTask.AssignedToUser.Id,
                         Name = $"{updatedTask.AssignedToUser.FirstName} {updatedTask.AssignedToUser.LastName}",
                         Avatar = updatedTask.AssignedToUser.Avatar,
                         Initials = updatedTask.AssignedToUser.Initials
                     } : null,
-                    CreatorId = updatedTask.CreatorId,
-                    Creator = updatedTask.Creator != null ? new TeamTasker.Application.Tasks.Models.UserMinimalDto
+                    // Prefer team member information if available
+                    CreatorTeamMemberId = updatedTask.CreatorTeamMemberId,
+                    CreatorId = updatedTask.CreatorTeamMember?.UserId ?? updatedTask.CreatorId,
+                    Creator = updatedTask.CreatorTeamMember?.User != null ? new TeamTasker.Application.Tasks.Models.UserMinimalDto
+                    {
+                        Id = updatedTask.CreatorTeamMember.User.Id,
+                        Name = $"{updatedTask.CreatorTeamMember.User.FirstName} {updatedTask.CreatorTeamMember.User.LastName}",
+                        Avatar = updatedTask.CreatorTeamMember.User.Avatar,
+                        Initials = updatedTask.CreatorTeamMember.User.Initials,
+                        TeamMemberId = updatedTask.CreatorTeamMemberId,
+                        TeamId = updatedTask.CreatorTeamMember.TeamId,
+                        TeamRole = updatedTask.CreatorTeamMember.Role
+                    } : updatedTask.Creator != null ? new TeamTasker.Application.Tasks.Models.UserMinimalDto
                     {
                         Id = updatedTask.Creator.Id,
                         Name = $"{updatedTask.Creator.FirstName} {updatedTask.Creator.LastName}",

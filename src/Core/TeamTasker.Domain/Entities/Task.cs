@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using TeamTasker.Domain.Events;
 using TeamTasker.SharedKernel;
 
@@ -40,10 +41,15 @@ namespace TeamTasker.Domain.Entities
         public int? CreatorTeamMemberId { get; set; } // Allow setting for now
         public TeamMember? CreatorTeamMember { get; private set; }
 
-        // Keep these for backward compatibility during migration
+        // These are deprecated and will be removed in a future version
+        // They are kept for backward compatibility during migration
+        [Obsolete("Use AssignedToTeamMemberId instead")]
         public int? AssignedToUserId { get; private set; }
+        [Obsolete("Use AssignedToTeamMember instead")]
         public User? AssignedToUser { get; private set; }
+        [Obsolete("Use CreatorTeamMemberId instead")]
         public int CreatorId { get; set; } // Allow setting for now
+        [Obsolete("Use CreatorTeamMember instead")]
         public User? Creator { get; private set; }
         public DateTime CreatedDate { get; private set; }
         public DateTime UpdatedDate { get; private set; }
@@ -111,6 +117,7 @@ namespace TeamTasker.Domain.Entities
             AddDomainEvent(new TaskStatusUpdatedEvent(this));
         }
 
+        [Obsolete("Use AssignToTeamMember instead")]
         public void AssignToUser(int userId)
         {
             AssignedToUserId = userId;
@@ -135,6 +142,7 @@ namespace TeamTasker.Domain.Entities
 
         public void RemoveAssignment()
         {
+            // For backward compatibility, clear both fields
             AssignedToUserId = null;
             AssignedToTeamMemberId = null;
             UpdatedDate = DateTime.UtcNow;

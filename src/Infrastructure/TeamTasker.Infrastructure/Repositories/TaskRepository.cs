@@ -186,13 +186,16 @@ namespace TeamTasker.Infrastructure.Repositories
                         // Get tasks where the current user is both creator and assignee
                         if (currentUserTeamMemberIds.Any())
                         {
+                            // Prioritize team member assignments
                             query = query.Where(t =>
+                                // Creator is the current user's team member
                                 (t.CreatorTeamMemberId.HasValue && currentUserTeamMemberIds.Contains(t.CreatorTeamMemberId.Value)) &&
+                                // Assignee is the current user's team member
                                 (t.AssignedToTeamMemberId.HasValue && currentUserTeamMemberIds.Contains(t.AssignedToTeamMemberId.Value)));
                         }
                         else
                         {
-                            // Fallback to user ID if no team members found
+                            // Fallback to user ID if no team members found (for backward compatibility)
                             query = query.Where(t => t.CreatorId == currentUserId.Value && t.AssignedToUserId == currentUserId.Value);
                         }
                         break;
@@ -255,12 +258,14 @@ namespace TeamTasker.Infrastructure.Repositories
 
                 if (teamMemberIds.Any())
                 {
+                    // Prioritize team member assignments
                     query = query.Where(t =>
                         (t.AssignedToTeamMemberId.HasValue && teamMemberIds.Contains(t.AssignedToTeamMemberId.Value)) ||
                         t.AssignedToUserId == assigneeId.Value);
                 }
                 else
                 {
+                    // Fallback to direct user assignment for backward compatibility
                     query = query.Where(t => t.AssignedToUserId == assigneeId.Value);
                 }
             }
