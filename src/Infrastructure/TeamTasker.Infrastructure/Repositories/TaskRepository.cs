@@ -177,33 +177,60 @@ namespace TeamTasker.Infrastructure.Repositories
                 switch (taskType.ToLower())
                 {
                     case "my":
-                        // My tasks - assigned to the current user
-                        query = query.Where(t => t.AssignedToUserId == currentUserId.Value);
+                        // My tasks - tasks that were both created by AND assigned to the current user
+                        // First, get the team member IDs for the current user
+                        var currentUserTeamMemberIds = _dbContext.TeamMembers
+                            .Where(tm => tm.UserId == currentUserId.Value)
+                            .Select(tm => tm.Id);
+
+                        // Get tasks where the current user is both creator and assignee
+                        if (currentUserTeamMemberIds.Any())
+                        {
+                            query = query.Where(t =>
+                                (t.CreatorTeamMemberId.HasValue && currentUserTeamMemberIds.Contains(t.CreatorTeamMemberId.Value)) &&
+                                (t.AssignedToTeamMemberId.HasValue && currentUserTeamMemberIds.Contains(t.AssignedToTeamMemberId.Value)));
+                        }
+                        else
+                        {
+                            // Fallback to user ID if no team members found
+                            query = query.Where(t => t.CreatorId == currentUserId.Value && t.AssignedToUserId == currentUserId.Value);
+                        }
                         break;
                     case "team":
-                        // Team tasks - tasks assigned to users in the same teams as the current user
+                        // Team tasks - tasks assigned to team members in the same teams as the current user (excluding the current user's tasks)
                         // First, get the teams the current user is a member of
                         var userTeamIds = _dbContext.TeamMembers
                             .Where(tm => tm.UserId == currentUserId.Value)
                             .Select(tm => tm.TeamId);
 
-                        // Then, get the user IDs of all members in those teams
+                        // Then, get the team member IDs of all members in those teams (excluding the current user)
                         var teamMemberIds = _dbContext.TeamMembers
-                            .Where(tm => userTeamIds.Contains(tm.TeamId))
-                            .Select(tm => tm.UserId);
+                            .Where(tm => userTeamIds.Contains(tm.TeamId) && tm.UserId != currentUserId.Value)
+                            .Select(tm => tm.Id);
 
-                        // Finally, get tasks assigned to those users (excluding the current user's tasks)
-                        query = query.Where(t => t.AssignedToUserId.HasValue &&
-                                               teamMemberIds.Contains(t.AssignedToUserId.Value) &&
-                                               t.AssignedToUserId != currentUserId.Value);
+                        // Finally, get tasks assigned to those team members
+                        query = query.Where(t => t.AssignedToTeamMemberId.HasValue && teamMemberIds.Contains(t.AssignedToTeamMemberId.Value));
                         break;
                     case "created":
                         // Tasks created by the current user
-                        query = query.Where(t => t.CreatorId == currentUserId.Value);
+                        // First, get the team member IDs for the current user
+                        var creatorTeamMemberIds = _dbContext.TeamMembers
+                            .Where(tm => tm.UserId == currentUserId.Value)
+                            .Select(tm => tm.Id);
+
+                        if (creatorTeamMemberIds.Any())
+                        {
+                            query = query.Where(t => t.CreatorTeamMemberId.HasValue && creatorTeamMemberIds.Contains(t.CreatorTeamMemberId.Value));
+                        }
+                        else
+                        {
+                            // Fallback to user ID if no team members found
+                            query = query.Where(t => t.CreatorId == currentUserId.Value);
+                        }
                         break;
                     case "unassigned":
                         // Unassigned tasks
-                        query = query.Where(t => !t.AssignedToUserId.HasValue);
+                        query = query.Where(t => !t.AssignedToTeamMemberId.HasValue && !t.AssignedToUserId.HasValue);
                         break;
                 }
             }
@@ -221,7 +248,21 @@ namespace TeamTasker.Infrastructure.Repositories
 
             if (assigneeId.HasValue)
             {
-                query = query.Where(t => t.AssignedToUserId == assigneeId.Value);
+                // Check if the assignee ID is a user ID or a team member ID
+                var teamMemberIds = _dbContext.TeamMembers
+                    .Where(tm => tm.UserId == assigneeId.Value)
+                    .Select(tm => tm.Id);
+
+                if (teamMemberIds.Any())
+                {
+                    query = query.Where(t =>
+                        (t.AssignedToTeamMemberId.HasValue && teamMemberIds.Contains(t.AssignedToTeamMemberId.Value)) ||
+                        t.AssignedToUserId == assigneeId.Value);
+                }
+                else
+                {
+                    query = query.Where(t => t.AssignedToUserId == assigneeId.Value);
+                }
             }
 
             if (projectId.HasValue)
@@ -259,6 +300,10 @@ namespace TeamTasker.Infrastructure.Repositories
             var tasks = await query
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
+                .Include(t => t.AssignedToTeamMember)
+                    .ThenInclude(tm => tm.User)
+                .Include(t => t.CreatorTeamMember)
+                    .ThenInclude(tm => tm.User)
                 .Include(t => t.AssignedToUser)
                 .Include(t => t.Project)
                 .Include(t => t.Creator)

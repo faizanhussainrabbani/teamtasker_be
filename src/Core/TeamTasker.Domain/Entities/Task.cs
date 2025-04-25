@@ -35,6 +35,12 @@ namespace TeamTasker.Domain.Entities
         public int Progress { get; private set; }
         public int ProjectId { get; private set; }
         public Project? Project { get; private set; }
+        public int? AssignedToTeamMemberId { get; private set; }
+        public TeamMember? AssignedToTeamMember { get; private set; }
+        public int? CreatorTeamMemberId { get; set; } // Allow setting for now
+        public TeamMember? CreatorTeamMember { get; private set; }
+
+        // Keep these for backward compatibility during migration
         public int? AssignedToUserId { get; private set; }
         public User? AssignedToUser { get; private set; }
         public int CreatorId { get; set; } // Allow setting for now
@@ -113,9 +119,24 @@ namespace TeamTasker.Domain.Entities
             AddDomainEvent(new TaskAssignedEvent(this, userId));
         }
 
+        public void AssignToTeamMember(int teamMemberId)
+        {
+            AssignedToTeamMemberId = teamMemberId;
+            UpdatedDate = DateTime.UtcNow;
+
+            AddDomainEvent(new TaskAssignedToTeamMemberEvent(this, teamMemberId));
+        }
+
+        public void SetCreatorTeamMember(int teamMemberId)
+        {
+            CreatorTeamMemberId = teamMemberId;
+            UpdatedDate = DateTime.UtcNow;
+        }
+
         public void RemoveAssignment()
         {
             AssignedToUserId = null;
+            AssignedToTeamMemberId = null;
             UpdatedDate = DateTime.UtcNow;
 
             AddDomainEvent(new TaskUnassignedEvent(this));

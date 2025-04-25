@@ -54,9 +54,14 @@ namespace TeamTasker.Application.Tasks.Models
         public string ProjectName { get; set; }
 
         /// <summary>
-        /// Assignee ID
+        /// Assignee ID (User ID)
         /// </summary>
         public int? AssigneeId { get; set; }
+
+        /// <summary>
+        /// Assignee Team Member ID
+        /// </summary>
+        public int? AssigneeTeamMemberId { get; set; }
 
         /// <summary>
         /// Assignee information
@@ -64,9 +69,14 @@ namespace TeamTasker.Application.Tasks.Models
         public UserMinimalDto Assignee { get; set; }
 
         /// <summary>
-        /// Creator ID
+        /// Creator ID (User ID)
         /// </summary>
         public int CreatorId { get; set; }
+
+        /// <summary>
+        /// Creator Team Member ID
+        /// </summary>
+        public int? CreatorTeamMemberId { get; set; }
 
         /// <summary>
         /// Creator information
@@ -95,7 +105,7 @@ namespace TeamTasker.Application.Tasks.Models
     }
 
     /// <summary>
-    /// Minimal user information for task assignee
+    /// Minimal user information for task assignee or creator
     /// </summary>
     public class UserMinimalDto
     {
@@ -118,5 +128,20 @@ namespace TeamTasker.Application.Tasks.Models
         /// User initials
         /// </summary>
         public string Initials { get; set; }
+
+        /// <summary>
+        /// Team Member ID (if applicable)
+        /// </summary>
+        public int? TeamMemberId { get; set; }
+
+        /// <summary>
+        /// Team ID (if applicable)
+        /// </summary>
+        public int? TeamId { get; set; }
+
+        /// <summary>
+        /// Team Role (if applicable)
+        /// </summary>
+        public string TeamRole { get; set; }
     }
 }
