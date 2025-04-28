@@ -10,6 +10,20 @@ namespace TeamTasker.Infrastructure.Data.Configurations
         {
             builder.HasKey(us => us.Id);
 
+            // Configure Level property with documentation
+            builder.Property(us => us.Level)
+                .IsRequired()
+                .HasComment("Proficiency level: 1=Beginner, 2=Intermediate, 3=Advanced, 4=Expert, 5=Master");
+
+            // Configure DateTime properties to use appropriate database type
+            builder.Property(us => us.CreatedDate)
+                .IsRequired()
+                .HasColumnType("datetime");
+
+            builder.Property(us => us.UpdatedDate)
+                .IsRequired()
+                .HasColumnType("datetime");
+
             // Configure relationship with User
             builder.HasOne(us => us.User)
                 .WithMany(u => u.Skills)

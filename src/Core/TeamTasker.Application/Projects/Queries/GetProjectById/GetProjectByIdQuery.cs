@@ -53,7 +53,7 @@ namespace TeamTasker.Application.Projects.Queries.GetProjectById
                     DueDate = task.DueDate,
                     Status = task.Status.ToString(),
                     Priority = task.Priority.ToString(),
-                    AssignedToUserId = task.AssignedToUserId
+                    AssignedToTeamMemberId = task.AssignedToTeamMemberId
                 });
             }
 

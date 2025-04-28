@@ -36,14 +36,20 @@ namespace TeamTasker.Infrastructure.Data.Configurations
             builder.HasIndex(u => u.Username)
                 .IsUnique();
 
+            // Configure enum properties with documentation
+            // Status: 0=Active, 1=Inactive, 2=Pending, 3=Locked
             builder.Property(u => u.Status)
-                .IsRequired();
+                .IsRequired()
+                .HasComment("User status: 0=Active, 1=Inactive, 2=Pending, 3=Locked");
 
+            // Configure DateTime properties to use appropriate database type
             builder.Property(u => u.CreatedDate)
-                .IsRequired();
+                .IsRequired()
+                .HasColumnType("datetime");
 
             builder.Property(u => u.UpdatedDate)
-                .IsRequired();
+                .IsRequired()
+                .HasColumnType("datetime");
 
             builder.Property(u => u.PasswordHash)
                 .HasMaxLength(255);

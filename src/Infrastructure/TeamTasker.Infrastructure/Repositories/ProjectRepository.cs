@@ -26,10 +26,21 @@ namespace TeamTasker.Infrastructure.Repositories
         {
             _logger.LogInformation("Getting projects for user {UserId}", userId);
 
-            // This is a simplified implementation. In a real application, you would have a many-to-many relationship
-            // between projects and users, and you would query based on that relationship.
+            // Get the team member IDs for this user
+            var teamMemberIds = await _dbContext.TeamMembers
+                .Where(tm => tm.UserId == userId)
+                .Select(tm => tm.Id)
+                .ToListAsync(cancellationToken);
+
+            if (!teamMemberIds.Any())
+            {
+                _logger.LogInformation("No team memberships found for user {UserId}", userId);
+                return new List<Project>();
+            }
+
+            // Get projects where the user is assigned to tasks as a team member
             var projects = await _dbContext.Projects
-                .Where(p => p.Tasks.Any(t => t.AssignedToUserId == userId))
+                .Where(p => p.Tasks.Any(t => t.AssignedToTeamMemberId.HasValue && teamMemberIds.Contains(t.AssignedToTeamMemberId.Value)))
                 .ToListAsync(cancellationToken);
 
             _logger.LogInformation("Retrieved {Count} projects for user {UserId}", projects.Count, userId);

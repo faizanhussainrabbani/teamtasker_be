@@ -12,7 +12,13 @@ namespace TeamTasker.Infrastructure.Data.Configurations
 
             builder.Property(tm => tm.Role)
                 .IsRequired()
-                .HasMaxLength(50);
+                .HasMaxLength(50)
+                .HasComment("Team member role: Owner, Admin, Member");
+
+            // Configure DateTime properties to use appropriate database type
+            builder.Property(tm => tm.JoinedDate)
+                .IsRequired()
+                .HasColumnType("datetime");
 
             // Configure relationship with Team
             builder.HasOne(tm => tm.Team)

@@ -27,7 +27,7 @@ namespace TeamTasker.Domain.UnitTests.Entities
             task.Priority.Should().Be(priority);
             task.Status.Should().Be(Domain.Entities.TaskStatus.ToDo);
             task.ProjectId.Should().Be(projectId);
-            task.AssignedToUserId.Should().BeNull();
+            task.AssignedToTeamMemberId.Should().BeNull();
             task.CompletedDate.Should().BeNull();
             task.CreatedDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
         }
@@ -150,49 +150,49 @@ namespace TeamTasker.Domain.UnitTests.Entities
         }
 
         [Fact]
-        public void AssignToUser_ShouldSetAssignedToUserId()
+        public void AssignToTeamMember_ShouldSetAssignedToTeamMemberId()
         {
             // Arrange
             var task = new Domain.Entities.Task("Test Task", "Test Description", DateTime.UtcNow, Domain.Entities.TaskPriority.Medium, 1);
-            var userId = 5;
+            var teamMemberId = 5;
 
             // Clear domain events from constructor
             task.ClearDomainEvents();
 
             // Act
-            task.AssignToUser(userId);
+            task.AssignToTeamMember(teamMemberId);
 
             // Assert
-            task.AssignedToUserId.Should().Be(userId);
+            task.AssignedToTeamMemberId.Should().Be(teamMemberId);
         }
 
         [Fact]
-        public void AssignToUser_ShouldRaiseTaskAssignedEvent()
+        public void AssignToTeamMember_ShouldRaiseTaskAssignedToTeamMemberEvent()
         {
             // Arrange
             var task = new Domain.Entities.Task("Test Task", "Test Description", DateTime.UtcNow, Domain.Entities.TaskPriority.Medium, 1);
-            var userId = 5;
+            var teamMemberId = 5;
 
             // Clear domain events from constructor
             task.ClearDomainEvents();
 
             // Act
-            task.AssignToUser(userId);
+            task.AssignToTeamMember(teamMemberId);
 
             // Assert
             task.DomainEvents.Should().ContainSingle();
-            task.DomainEvents.Should().ContainItemsAssignableTo<TaskAssignedEvent>();
-            var @event = task.DomainEvents.Should().ContainSingle(e => e is TaskAssignedEvent).Subject as TaskAssignedEvent;
-            @event.TaskItem.Should().Be(task);
-            @event.UserId.Should().Be(userId);
+            task.DomainEvents.Should().ContainItemsAssignableTo<TaskAssignedToTeamMemberEvent>();
+            var @event = task.DomainEvents.Should().ContainSingle(e => e is TaskAssignedToTeamMemberEvent).Subject as TaskAssignedToTeamMemberEvent;
+            @event.Task.Should().Be(task);
+            @event.TeamMemberId.Should().Be(teamMemberId);
         }
 
         [Fact]
-        public void RemoveAssignment_ShouldClearAssignedToUserId()
+        public void RemoveAssignment_ShouldClearAssignedToTeamMemberId()
         {
             // Arrange
             var task = new Domain.Entities.Task("Test Task", "Test Description", DateTime.UtcNow, Domain.Entities.TaskPriority.Medium, 1);
-            task.AssignToUser(5);
+            task.AssignToTeamMember(5);
 
             // Clear domain events from constructor and assignment
             task.ClearDomainEvents();
@@ -201,7 +201,7 @@ namespace TeamTasker.Domain.UnitTests.Entities
             task.RemoveAssignment();
 
             // Assert
-            task.AssignedToUserId.Should().BeNull();
+            task.AssignedToTeamMemberId.Should().BeNull();
         }
 
         [Fact]
@@ -209,7 +209,7 @@ namespace TeamTasker.Domain.UnitTests.Entities
         {
             // Arrange
             var task = new Domain.Entities.Task("Test Task", "Test Description", DateTime.UtcNow, Domain.Entities.TaskPriority.Medium, 1);
-            task.AssignToUser(5);
+            task.AssignToTeamMember(5);
 
             // Clear domain events from constructor and assignment
             task.ClearDomainEvents();

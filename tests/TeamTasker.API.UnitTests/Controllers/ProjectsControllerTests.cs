@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
 using TeamTasker.API.Controllers;
 using TeamTasker.Application.Common.Exceptions;
+using TeamTasker.Application.Common.Models;
 using TeamTasker.Application.Projects.Commands.CreateProject;
 using TeamTasker.Application.Projects.Commands.DeleteProject;
 using TeamTasker.Application.Projects.Commands.UpdateProject;
@@ -35,7 +36,7 @@ namespace TeamTasker.API.UnitTests.Controllers
         }
 
         [Fact]
-        public async Task GetProjects_ShouldReturnOkResult_WithListOfProjects()
+        public async Task GetProjects_ShouldReturnOkResult_WithPaginatedListOfProjects()
         {
             // Arrange
             var projects = new List<ProjectDto>
@@ -44,21 +45,27 @@ namespace TeamTasker.API.UnitTests.Controllers
                 new ProjectDto { Id = 2, Name = "Project 2", Description = "Description 2" }
             };
 
+            var paginatedList = new PaginatedList<ProjectDto>(projects, 2, 1, 10);
+
             _mediator.Send(Arg.Any<GetProjectsQuery>(), Arg.Any<CancellationToken>())
-                .Returns(Task.FromResult(projects));
+                .Returns(Task.FromResult(paginatedList));
 
             // Act
             var result = await _controller.GetProjects();
 
             // Assert
-            var okResult = result.Result.Should().BeOfType<OkObjectResult>().Subject;
-            var returnValue = okResult.Value.Should().BeAssignableTo<List<ProjectDto>>().Subject;
+            var okResult = result.Result.Should().BeOfType<ActionResult<PaginatedList<ProjectDto>>>().Subject;
+            var returnValue = okResult.Value.Should().BeOfType<PaginatedList<ProjectDto>>().Subject;
 
-            returnValue.Should().HaveCount(2);
-            returnValue[0].Id.Should().Be(1);
-            returnValue[0].Name.Should().Be("Project 1");
-            returnValue[1].Id.Should().Be(2);
-            returnValue[1].Name.Should().Be("Project 2");
+            returnValue.Items.Count.Should().Be(2);
+            returnValue.Items[0].Id.Should().Be(1);
+            returnValue.Items[0].Name.Should().Be("Project 1");
+            returnValue.Items[1].Id.Should().Be(2);
+            returnValue.Items[1].Name.Should().Be("Project 2");
+            returnValue.TotalCount.Should().Be(2);
+            returnValue.TotalPages.Should().Be(1);
+            returnValue.PageNumber.Should().Be(1);
+            returnValue.PageSize.Should().Be(10);
         }
 
         [Fact]

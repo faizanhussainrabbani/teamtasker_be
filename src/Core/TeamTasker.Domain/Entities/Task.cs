@@ -41,15 +41,7 @@ namespace TeamTasker.Domain.Entities
         public int? CreatorTeamMemberId { get; set; } // Allow setting for now
         public TeamMember? CreatorTeamMember { get; private set; }
 
-        // These are deprecated and will be removed in a future version
-        // They are kept for backward compatibility during migration
-        [Obsolete("Use AssignedToTeamMemberId instead")]
-        public int? AssignedToUserId { get; private set; }
-        [Obsolete("Use AssignedToTeamMember instead")]
-        public User? AssignedToUser { get; private set; }
-        // CreatorId has been removed in favor of CreatorTeamMemberId
-        [Obsolete("Use CreatorTeamMember instead")]
-        public User? Creator { get; private set; }
+        // AssignedToUserId and Creator have been removed in favor of TeamMember relationships
         public DateTime CreatedDate { get; private set; }
         public DateTime UpdatedDate { get; private set; }
         public DateTime? CompletedDate { get; private set; }
@@ -116,14 +108,7 @@ namespace TeamTasker.Domain.Entities
             AddDomainEvent(new TaskStatusUpdatedEvent(this));
         }
 
-        [Obsolete("Use AssignToTeamMember instead")]
-        public void AssignToUser(int userId)
-        {
-            AssignedToUserId = userId;
-            UpdatedDate = DateTime.UtcNow;
-
-            AddDomainEvent(new TaskAssignedEvent(this, userId));
-        }
+        // AssignToUser method has been removed in favor of AssignToTeamMember
 
         public void AssignToTeamMember(int teamMemberId)
         {
@@ -141,31 +126,33 @@ namespace TeamTasker.Domain.Entities
 
         public void RemoveAssignment()
         {
-            // For backward compatibility, clear both fields
-            AssignedToUserId = null;
             AssignedToTeamMemberId = null;
             UpdatedDate = DateTime.UtcNow;
 
             AddDomainEvent(new TaskUnassignedEvent(this));
         }
 
-        public void AddTag(string tag)
+        public void AddTag(int tagId)
         {
             // This will be handled by the repository layer
             // We just need to add the domain event here
             UpdatedDate = DateTime.UtcNow;
 
-            AddDomainEvent(new TaskTagAddedEvent(this, tag));
+            AddDomainEvent(new TaskTagAddedEvent(this, tagId));
         }
 
-        public void RemoveTag(string tag)
+        // AddTag(string) method has been removed in favor of AddTag(int)
+
+        public void RemoveTag(int tagId)
         {
             // This will be handled by the repository layer
             // We just need to add the domain event here
             UpdatedDate = DateTime.UtcNow;
 
-            AddDomainEvent(new TaskTagRemovedEvent(this, tag));
+            AddDomainEvent(new TaskTagRemovedEvent(this, tagId));
         }
+
+        // RemoveTag(string) method has been removed in favor of RemoveTag(int)
     }
 
     public enum TaskStatus

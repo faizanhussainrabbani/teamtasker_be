@@ -25,6 +25,6 @@ namespace TeamTasker.Application.Projects.Queries.GetProjectById
         public DateTime DueDate { get; set; }
         public string Status { get; set; }
         public string Priority { get; set; }
-        public int? AssignedToUserId { get; set; }
+        public int? AssignedToTeamMemberId { get; set; }
     }
 }

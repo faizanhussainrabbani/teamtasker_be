@@ -19,25 +19,52 @@ namespace TeamTasker.Infrastructure.Data.Configurations
             builder.Property(t => t.Description)
                 .HasMaxLength(500);
 
+            // Configure enum properties with documentation
+            // Status: 0=ToDo, 1=InProgress, 2=Done, 3=Blocked, 4=OnHold, 5=Cancelled
             builder.Property(t => t.Status)
-                .IsRequired();
+                .IsRequired()
+                .HasComment("Task status: 0=ToDo, 1=InProgress, 2=Done, 3=Blocked, 4=OnHold, 5=Cancelled");
 
+            // Priority: 0=Low, 1=Medium, 2=High, 3=Critical
             builder.Property(t => t.Priority)
-                .IsRequired();
+                .IsRequired()
+                .HasComment("Task priority: 0=Low, 1=Medium, 2=High, 3=Critical");
 
+            // Configure DateTime properties to use appropriate database type
             builder.Property(t => t.CreatedDate)
-                .IsRequired();
+                .IsRequired()
+                .HasColumnType("datetime");
 
             builder.Property(t => t.UpdatedDate)
-                .IsRequired();
+                .IsRequired()
+                .HasColumnType("datetime");
+
+            builder.Property(t => t.DueDate)
+                .IsRequired()
+                .HasColumnType("datetime");
+
+            builder.Property(t => t.CompletedDate)
+                .HasColumnType("datetime");
 
             builder.Property(t => t.Progress)
                 .IsRequired();
 
-            // Configure relationship with User (Assignee)
-            builder.HasOne(t => t.AssignedToUser)
-                .WithMany(u => u.AssignedTasks)
-                .HasForeignKey(t => t.AssignedToUserId)
+            // Add indexes for frequently queried columns
+            builder.HasIndex(t => t.Status);
+            builder.HasIndex(t => t.DueDate);
+            builder.HasIndex(t => t.Priority);
+
+            // Configure relationship with TeamMember (Creator)
+            builder.HasOne(t => t.CreatorTeamMember)
+                .WithMany()
+                .HasForeignKey(t => t.CreatorTeamMemberId)
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            // Configure relationship with TeamMember (Assignee)
+            builder.HasOne(t => t.AssignedToTeamMember)
+                .WithMany()
+                .HasForeignKey(t => t.AssignedToTeamMemberId)
                 .IsRequired(false)
                 .OnDelete(DeleteBehavior.SetNull);
         }

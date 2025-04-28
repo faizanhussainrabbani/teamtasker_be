@@ -24,6 +24,7 @@ namespace TeamTasker.Infrastructure.UnitTests.Repositories
                 .Options;
 
             var domainEventDispatcher = Substitute.For<IDomainEventDispatcher>();
+            var logger = Substitute.For<Microsoft.Extensions.Logging.ILogger<ProjectRepository>>();
 
             // Create and seed the database
             using (var context = new ApplicationDbContext(options, domainEventDispatcher))
@@ -40,7 +41,7 @@ namespace TeamTasker.Infrastructure.UnitTests.Repositories
             // Use a separate instance of the context to verify correct data was saved
             using (var context = new ApplicationDbContext(options, domainEventDispatcher))
             {
-                var repository = new ProjectRepository(context);
+                var repository = new ProjectRepository(context, logger);
 
                 // Act
                 var result = await repository.GetProjectWithTasksAsync(1);
@@ -64,10 +65,11 @@ namespace TeamTasker.Infrastructure.UnitTests.Repositories
                 .Options;
 
             var domainEventDispatcher = Substitute.For<IDomainEventDispatcher>();
+            var logger = Substitute.For<Microsoft.Extensions.Logging.ILogger<ProjectRepository>>();
 
             using (var context = new ApplicationDbContext(options, domainEventDispatcher))
             {
-                var repository = new ProjectRepository(context);
+                var repository = new ProjectRepository(context, logger);
 
                 // Act
                 var result = await repository.GetProjectWithTasksAsync(999);
@@ -86,25 +88,46 @@ namespace TeamTasker.Infrastructure.UnitTests.Repositories
                 .Options;
 
             var domainEventDispatcher = Substitute.For<IDomainEventDispatcher>();
+            var logger = Substitute.For<Microsoft.Extensions.Logging.ILogger<ProjectRepository>>();
             var userId = 5;
+            var teamMemberId1 = 10;
+            var teamMemberId2 = 11;
+            var teamMemberId3 = 12;
 
             // Create and seed the database
             using (var context = new ApplicationDbContext(options, domainEventDispatcher))
             {
-                // Project 1 with tasks assigned to user
+                // Create team members for the user
+                var user = new User("Test", "User", "test@example.com", "testuser", "password", "User");
+                user.Id = userId;
+                context.Users.Add(user);
+
+                var teamMember1 = new TeamMember(1, userId, "Developer");
+                teamMember1.Id = teamMemberId1;
+
+                var teamMember2 = new TeamMember(1, userId, "Developer");
+                teamMember2.Id = teamMemberId2;
+
+                var teamMember3 = new TeamMember(1, 999, "Developer"); // Different user
+                teamMember3.Id = teamMemberId3;
+
+                context.TeamMembers.AddRange(teamMember1, teamMember2, teamMember3);
+                await context.SaveChangesAsync();
+
+                // Project 1 with tasks assigned to user's team member
                 var project1 = new Project("Project 1", "Description 1", DateTime.UtcNow, DateTime.UtcNow.AddDays(10));
                 var task1 = project1.AddTask("Task 1", "Task 1 Description", DateTime.UtcNow.AddDays(5), TaskPriority.High);
-                task1.AssignToUser(userId);
+                task1.AssignToTeamMember(teamMemberId1);
 
-                // Project 2 with tasks assigned to user
+                // Project 2 with tasks assigned to user's team member
                 var project2 = new Project("Project 2", "Description 2", DateTime.UtcNow, DateTime.UtcNow.AddDays(20));
                 var task2 = project2.AddTask("Task 2", "Task 2 Description", DateTime.UtcNow.AddDays(10), TaskPriority.Medium);
-                task2.AssignToUser(userId);
+                task2.AssignToTeamMember(teamMemberId2);
 
-                // Project 3 with no tasks assigned to user
+                // Project 3 with no tasks assigned to user's team member
                 var project3 = new Project("Project 3", "Description 3", DateTime.UtcNow, DateTime.UtcNow.AddDays(30));
                 var task3 = project3.AddTask("Task 3", "Task 3 Description", DateTime.UtcNow.AddDays(15), TaskPriority.Low);
-                task3.AssignToUser(999); // Different user
+                task3.AssignToTeamMember(teamMemberId3); // Different user's team member
 
                 context.Projects.AddRange(project1, project2, project3);
                 await context.SaveChangesAsync();
@@ -113,7 +136,7 @@ namespace TeamTasker.Infrastructure.UnitTests.Repositories
             // Use a separate instance of the context to verify correct data was saved
             using (var context = new ApplicationDbContext(options, domainEventDispatcher))
             {
-                var repository = new ProjectRepository(context);
+                var repository = new ProjectRepository(context, logger);
 
                 // Act
                 var result = await repository.GetProjectsByUserIdAsync(userId);

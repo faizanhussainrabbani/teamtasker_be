@@ -17,6 +17,7 @@ namespace TeamTasker.Application.Common.Interfaces
         DbSet<TeamMember> TeamMembers { get; }
         DbSet<Skill> Skills { get; }
         DbSet<UserSkill> UserSkills { get; }
+        DbSet<Tag> Tags { get; }
         DbSet<TaskTag> TaskTags { get; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);

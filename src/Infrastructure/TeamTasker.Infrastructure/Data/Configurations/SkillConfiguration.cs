@@ -20,6 +20,18 @@ namespace TeamTasker.Infrastructure.Data.Configurations
 
             builder.Property(s => s.Description)
                 .HasMaxLength(500);
+
+            // Configure DateTime properties to use appropriate database type
+            builder.Property(s => s.CreatedDate)
+                .IsRequired()
+                .HasColumnType("datetime");
+
+            builder.Property(s => s.UpdatedDate)
+                .IsRequired()
+                .HasColumnType("datetime");
+
+            // Add indexes for frequently queried columns
+            builder.HasIndex(s => s.Category);
         }
     }
 }

@@ -16,7 +16,7 @@ namespace TeamTasker.Infrastructure.UnitTests.Repositories
     public class TaskRepositoryTests
     {
         [Fact]
-        public async Task GetTasksByUserIdAsync_ShouldReturnTasksAssignedToUser()
+        public async Task GetByAssigneeIdAsync_ShouldReturnTasksAssignedToTeamMember()
         {
             // Arrange
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
@@ -24,7 +24,8 @@ namespace TeamTasker.Infrastructure.UnitTests.Repositories
                 .Options;
 
             var domainEventDispatcher = Substitute.For<IDomainEventDispatcher>();
-            var userId = 5;
+            var logger = Substitute.For<Microsoft.Extensions.Logging.ILogger<TaskRepository>>();
+            var teamMemberId = 5;
 
             // Create and seed the database
             using (var context = new ApplicationDbContext(options, domainEventDispatcher))
@@ -32,13 +33,13 @@ namespace TeamTasker.Infrastructure.UnitTests.Repositories
                 var project = new Project("Test Project", "Test Description", DateTime.UtcNow, DateTime.UtcNow.AddDays(30));
 
                 var task1 = project.AddTask("Task 1", "Task 1 Description", DateTime.UtcNow.AddDays(5), TaskPriority.High);
-                task1.AssignToUser(userId);
+                task1.AssignToTeamMember(teamMemberId);
 
                 var task2 = project.AddTask("Task 2", "Task 2 Description", DateTime.UtcNow.AddDays(10), TaskPriority.Medium);
-                task2.AssignToUser(userId);
+                task2.AssignToTeamMember(teamMemberId);
 
                 var task3 = project.AddTask("Task 3", "Task 3 Description", DateTime.UtcNow.AddDays(15), TaskPriority.Low);
-                task3.AssignToUser(999); // Different user
+                task3.AssignToTeamMember(999); // Different team member
 
                 context.Projects.Add(project);
                 await context.SaveChangesAsync();
@@ -47,10 +48,10 @@ namespace TeamTasker.Infrastructure.UnitTests.Repositories
             // Use a separate instance of the context to verify correct data was saved
             using (var context = new ApplicationDbContext(options, domainEventDispatcher))
             {
-                var repository = new TaskRepository(context);
+                var repository = new TaskRepository(context, logger);
 
                 // Act
-                var result = await repository.GetTasksByUserIdAsync(userId);
+                var result = await repository.GetByAssigneeIdAsync(teamMemberId);
 
                 // Assert
                 result.Should().NotBeNull();
@@ -60,7 +61,7 @@ namespace TeamTasker.Infrastructure.UnitTests.Repositories
         }
 
         [Fact]
-        public async Task GetTasksByProjectIdAsync_ShouldReturnTasksForProject()
+        public async Task GetByProjectIdAsync_ShouldReturnTasksForProject()
         {
             // Arrange
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
@@ -68,6 +69,7 @@ namespace TeamTasker.Infrastructure.UnitTests.Repositories
                 .Options;
 
             var domainEventDispatcher = Substitute.For<IDomainEventDispatcher>();
+            var logger = Substitute.For<Microsoft.Extensions.Logging.ILogger<TaskRepository>>();
 
             // Create and seed the database
             using (var context = new ApplicationDbContext(options, domainEventDispatcher))
@@ -86,10 +88,10 @@ namespace TeamTasker.Infrastructure.UnitTests.Repositories
             // Use a separate instance of the context to verify correct data was saved
             using (var context = new ApplicationDbContext(options, domainEventDispatcher))
             {
-                var repository = new TaskRepository(context);
+                var repository = new TaskRepository(context, logger);
 
                 // Act
-                var result = await repository.GetTasksByProjectIdAsync(1); // Project 1
+                var result = await repository.GetByProjectIdAsync(1); // Project 1
 
                 // Assert
                 result.Should().NotBeNull();

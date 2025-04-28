@@ -20,8 +20,32 @@ namespace TeamTasker.Infrastructure.Data.Configurations
             builder.Property(p => p.Description)
                 .HasMaxLength(500);
 
+            // Configure enum properties with documentation
+            // Status: 0=NotStarted, 1=Active, 2=OnHold, 3=Completed, 4=Cancelled
             builder.Property(p => p.Status)
-                .IsRequired();
+                .IsRequired()
+                .HasComment("Project status: 0=NotStarted, 1=Active, 2=OnHold, 3=Completed, 4=Cancelled");
+
+            // Configure DateTime properties to use appropriate database type
+            builder.Property(p => p.CreatedDate)
+                .IsRequired()
+                .HasColumnType("datetime");
+
+            builder.Property(p => p.UpdatedDate)
+                .IsRequired()
+                .HasColumnType("datetime");
+
+            builder.Property(p => p.StartDate)
+                .IsRequired()
+                .HasColumnType("datetime");
+
+            builder.Property(p => p.EndDate)
+                .HasColumnType("datetime");
+
+            // Add indexes for frequently queried columns
+            builder.HasIndex(p => p.Status);
+            builder.HasIndex(p => p.StartDate);
+            builder.HasIndex(p => p.EndDate);
 
             builder.HasMany(p => p.Tasks)
                 .WithOne(t => t.Project)

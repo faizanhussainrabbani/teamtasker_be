@@ -11,16 +11,17 @@ namespace TeamTasker.Domain.Entities
     {
         private TaskTag() { } // Required by EF Core
 
-        public TaskTag(int taskId, string tag)
+        public TaskTag(int taskId, int tagId)
         {
             TaskId = taskId;
-            Tag = tag;
+            TagId = tagId;
             CreatedDate = DateTime.UtcNow;
         }
 
         public int TaskId { get; private set; }
         public Task Task { get; private set; }
-        public string Tag { get; private set; }
+        public int TagId { get; private set; }
+        public Tag Tag { get; private set; }
         public DateTime CreatedDate { get; private set; }
     }
 }

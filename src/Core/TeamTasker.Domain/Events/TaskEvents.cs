@@ -77,27 +77,5 @@ namespace TeamTasker.Domain.Events
         }
     }
 
-    public class TaskTagAddedEvent : INotification
-    {
-        public Entities.Task TaskItem { get; }
-        public string Tag { get; }
 
-        public TaskTagAddedEvent(Entities.Task task, string tag)
-        {
-            TaskItem = task;
-            Tag = tag;
-        }
-    }
-
-    public class TaskTagRemovedEvent : INotification
-    {
-        public Entities.Task TaskItem { get; }
-        public string Tag { get; }
-
-        public TaskTagRemovedEvent(Entities.Task task, string tag)
-        {
-            TaskItem = task;
-            Tag = tag;
-        }
-    }
 }

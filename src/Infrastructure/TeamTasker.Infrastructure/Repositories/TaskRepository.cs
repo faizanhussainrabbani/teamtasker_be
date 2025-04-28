@@ -9,6 +9,7 @@ using DomainTask = TeamTasker.Domain.Entities.Task;
 using DomainTaskStatus = TeamTasker.Domain.Entities.TaskStatus;
 using DomainTaskPriority = TeamTasker.Domain.Entities.TaskPriority;
 using DomainTaskTag = TeamTasker.Domain.Entities.TaskTag;
+using DomainTag = TeamTasker.Domain.Entities.Tag;
 using TeamTasker.Domain.Interfaces;
 using TeamTasker.Infrastructure.Data;
 
@@ -29,11 +30,14 @@ namespace TeamTasker.Infrastructure.Repositories
             _logger.LogInformation("Getting tasks for assignee {AssigneeId}", assigneeId);
 
             return await _dbContext.Tasks
-                .Where(t => t.AssignedToUserId == assigneeId)
-                .Include(t => t.AssignedToUser)
+                .Where(t => t.AssignedToTeamMemberId == assigneeId)
+                .Include(t => t.AssignedToTeamMember)
+                    .ThenInclude(tm => tm.User)
                 .Include(t => t.Project)
-                .Include(t => t.Creator)
+                .Include(t => t.CreatorTeamMember)
+                    .ThenInclude(tm => tm.User)
                 .Include(t => t.Tags)
+                    .ThenInclude(tt => tt.Tag)
                 .ToListAsync(cancellationToken);
         }
 
@@ -43,10 +47,13 @@ namespace TeamTasker.Infrastructure.Repositories
 
             return await _dbContext.Tasks
                 .Where(t => t.ProjectId == projectId)
-                .Include(t => t.AssignedToUser)
+                .Include(t => t.AssignedToTeamMember)
+                    .ThenInclude(tm => tm.User)
                 .Include(t => t.Project)
-                .Include(t => t.Creator)
+                .Include(t => t.CreatorTeamMember)
+                    .ThenInclude(tm => tm.User)
                 .Include(t => t.Tags)
+                    .ThenInclude(tt => tt.Tag)
                 .ToListAsync(cancellationToken);
         }
 
@@ -56,10 +63,13 @@ namespace TeamTasker.Infrastructure.Repositories
 
             return await _dbContext.Tasks
                 .Where(t => t.Status == status)
-                .Include(t => t.AssignedToUser)
+                .Include(t => t.AssignedToTeamMember)
+                    .ThenInclude(tm => tm.User)
                 .Include(t => t.Project)
-                .Include(t => t.Creator)
+                .Include(t => t.CreatorTeamMember)
+                    .ThenInclude(tm => tm.User)
                 .Include(t => t.Tags)
+                    .ThenInclude(tt => tt.Tag)
                 .ToListAsync(cancellationToken);
         }
 
@@ -69,10 +79,13 @@ namespace TeamTasker.Infrastructure.Repositories
 
             return await _dbContext.Tasks
                 .Where(t => t.Priority == priority)
-                .Include(t => t.AssignedToUser)
+                .Include(t => t.AssignedToTeamMember)
+                    .ThenInclude(tm => tm.User)
                 .Include(t => t.Project)
-                .Include(t => t.Creator)
+                .Include(t => t.CreatorTeamMember)
+                    .ThenInclude(tm => tm.User)
                 .Include(t => t.Tags)
+                    .ThenInclude(tt => tt.Tag)
                 .ToListAsync(cancellationToken);
         }
 
@@ -86,10 +99,13 @@ namespace TeamTasker.Infrastructure.Repositories
 
             return await _dbContext.Tasks
                 .Where(t => t.DueDate >= startDate && t.DueDate <= endDate)
-                .Include(t => t.AssignedToUser)
+                .Include(t => t.AssignedToTeamMember)
+                    .ThenInclude(tm => tm.User)
                 .Include(t => t.Project)
-                .Include(t => t.Creator)
+                .Include(t => t.CreatorTeamMember)
+                    .ThenInclude(tm => tm.User)
                 .Include(t => t.Tags)
+                    .ThenInclude(tt => tt.Tag)
                 .ToListAsync(cancellationToken);
         }
 
@@ -97,12 +113,24 @@ namespace TeamTasker.Infrastructure.Repositories
         {
             _logger.LogInformation("Getting tasks with tag {Tag}", tag);
 
+            // First find the tag by name
+            var tagEntity = await _dbContext.Tags
+                .FirstOrDefaultAsync(t => t.Name == tag, cancellationToken);
+
+            if (tagEntity == null)
+            {
+                return new List<DomainTask>();
+            }
+
             return await _dbContext.Tasks
-                .Where(t => t.Tags.Any(tt => tt.Tag == tag))
-                .Include(t => t.AssignedToUser)
+                .Where(t => t.Tags.Any(tt => tt.TagId == tagEntity.Id))
+                .Include(t => t.AssignedToTeamMember)
+                    .ThenInclude(tm => tm.User)
                 .Include(t => t.Project)
-                .Include(t => t.Creator)
+                .Include(t => t.CreatorTeamMember)
+                    .ThenInclude(tm => tm.User)
                 .Include(t => t.Tags)
+                    .ThenInclude(tt => tt.Tag)
                 .ToListAsync(cancellationToken);
         }
 
@@ -119,11 +147,23 @@ namespace TeamTasker.Infrastructure.Repositories
                 throw new ArgumentException($"Task with ID {taskId} not found");
             }
 
-            // Check if tag already exists
-            if (!task.Tags.Any(t => t.Tag == tag))
+            // Find or create the tag
+            var tagEntity = await _dbContext.Tags
+                .FirstOrDefaultAsync(t => t.Name == tag, cancellationToken);
+
+            if (tagEntity == null)
             {
-                var taskTag = new DomainTaskTag(taskId, tag);
-                task.AddTag(tag);
+                // Create a new tag
+                tagEntity = new DomainTag(tag);
+                _dbContext.Tags.Add(tagEntity);
+                await _dbContext.SaveChangesAsync(cancellationToken);
+            }
+
+            // Check if task already has this tag
+            if (!task.Tags.Any(t => t.TagId == tagEntity.Id))
+            {
+                var taskTag = new DomainTaskTag(taskId, tagEntity.Id);
+                task.AddTag(tagEntity.Id);
                 _dbContext.TaskTags.Add(taskTag);
                 await _dbContext.SaveChangesAsync(cancellationToken);
             }
@@ -142,10 +182,20 @@ namespace TeamTasker.Infrastructure.Repositories
                 throw new ArgumentException($"Task with ID {taskId} not found");
             }
 
-            var taskTag = task.Tags.FirstOrDefault(t => t.Tag == tag);
+            // Find the tag
+            var tagEntity = await _dbContext.Tags
+                .FirstOrDefaultAsync(t => t.Name == tag, cancellationToken);
+
+            if (tagEntity == null)
+            {
+                // Tag doesn't exist, nothing to remove
+                return;
+            }
+
+            var taskTag = task.Tags.FirstOrDefault(t => t.TagId == tagEntity.Id);
             if (taskTag != null)
             {
-                task.RemoveTag(tag);
+                task.RemoveTag(tagEntity.Id);
                 _dbContext.TaskTags.Remove(taskTag);
                 await _dbContext.SaveChangesAsync(cancellationToken);
             }
@@ -233,7 +283,7 @@ namespace TeamTasker.Infrastructure.Repositories
                         break;
                     case "unassigned":
                         // Unassigned tasks
-                        query = query.Where(t => !t.AssignedToTeamMemberId.HasValue && !t.AssignedToUserId.HasValue);
+                        query = query.Where(t => !t.AssignedToTeamMemberId.HasValue);
                         break;
                 }
             }
@@ -258,15 +308,13 @@ namespace TeamTasker.Infrastructure.Repositories
 
                 if (teamMemberIds.Any())
                 {
-                    // Prioritize team member assignments
-                    query = query.Where(t =>
-                        (t.AssignedToTeamMemberId.HasValue && teamMemberIds.Contains(t.AssignedToTeamMemberId.Value)) ||
-                        t.AssignedToUserId == assigneeId.Value);
+                    // Filter by team member assignments
+                    query = query.Where(t => t.AssignedToTeamMemberId.HasValue && teamMemberIds.Contains(t.AssignedToTeamMemberId.Value));
                 }
                 else
                 {
-                    // Fallback to direct user assignment for backward compatibility
-                    query = query.Where(t => t.AssignedToUserId == assigneeId.Value);
+                    // If no team members found for this user, they can't have any tasks assigned
+                    query = query.Where(t => false); // Empty result set
                 }
             }
 
@@ -284,7 +332,21 @@ namespace TeamTasker.Infrastructure.Repositories
 
             if (!string.IsNullOrEmpty(tag))
             {
-                query = query.Where(t => t.Tags.Any(tt => tt.Tag == tag));
+                // Find the tag ID first
+                var tagId = _dbContext.Tags
+                    .Where(t => t.Name == tag)
+                    .Select(t => t.Id)
+                    .FirstOrDefault();
+
+                if (tagId > 0)
+                {
+                    query = query.Where(t => t.Tags.Any(tt => tt.TagId == tagId));
+                }
+                else
+                {
+                    // Tag doesn't exist, so no tasks can have it
+                    query = query.Where(t => false); // Empty result set
+                }
             }
 
             if (!string.IsNullOrEmpty(searchTerm))
@@ -309,10 +371,9 @@ namespace TeamTasker.Infrastructure.Repositories
                     .ThenInclude(tm => tm.User)
                 .Include(t => t.CreatorTeamMember)
                     .ThenInclude(tm => tm.User)
-                .Include(t => t.AssignedToUser)
                 .Include(t => t.Project)
-                .Include(t => t.Creator)
                 .Include(t => t.Tags)
+                    .ThenInclude(tt => tt.Tag)
                 .ToListAsync(cancellationToken);
 
             return (tasks, totalCount);
