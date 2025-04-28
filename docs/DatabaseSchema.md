@@ -29,17 +29,32 @@ The TeamTasker database consists of the following tables:
         │                       │
 ┌───────▼───────┐       ┌───────▼───────┐
 │               │       │               │
-│   UserSkills  │       │     Tasks     │
-│               │       │               │
-└───────┬───────┘       └───────┬───────┘
-        │                       │
-        │                       │
-        ▼                       ▼
-┌───────────────┐       ┌───────────────┐       ┌───────────────┐
-│               │       │               │       │               │
-│    Skills     │       │   TaskTags    │◀──────┤   Projects    │
-│               │       │               │       │               │
-└───────────────┘       └───────────────┘       └───────────────┘
+│   UserSkills  │       │     Tasks     │◀──────┐
+│               │       │               │       │
+└───────┬───────┘       └───────┬───────┘       │
+        │                       │               │
+        │                       │               │
+        ▼                       ▼               │
+┌───────────────┐       ┌───────────────┐       │
+│               │       │               │       │
+│    Skills     │       │   TaskTags    │       │
+│               │       │               │       │
+└───────────────┘       └───────┬───────┘       │
+                                │               │
+                                │               │
+                                ▼               │
+                        ┌───────────────┐       │
+                        │               │       │
+                        │     Tags      │       │
+                        │               │       │
+                        └───────────────┘       │
+                                                │
+                                                │
+                        ┌───────────────┐       │
+                        │               │       │
+                        │   Projects    │───────┘
+                        │               │
+                        └───────────────┘
 ```
 
 ## Detailed Table Schemas
@@ -162,6 +177,17 @@ Junction table for user-skill relationships.
 | CreatedDate | TEXT | NOT NULL | Date when the user skill record was created |
 | UpdatedDate | TEXT | NOT NULL | Date when the user skill record was last updated |
 
+### Tags Table
+
+Stores tag information.
+
+| Column Name | Data Type | Constraints | Description |
+|-------------|-----------|-------------|-------------|
+| Id | INTEGER | PRIMARY KEY, AUTOINCREMENT | Unique identifier for the tag |
+| Name | TEXT | NOT NULL | Tag name |
+| CreatedDate | TEXT | NOT NULL | Date when the tag was created |
+| UpdatedDate | TEXT | NOT NULL | Date when the tag was last updated |
+
 ### TaskTags Table
 
 Junction table for task-tag relationships.
@@ -169,7 +195,7 @@ Junction table for task-tag relationships.
 | Column Name | Data Type | Constraints | Description |
 |-------------|-----------|-------------|-------------|
 | TaskId | INTEGER | NOT NULL | Foreign key to Tasks table |
-| Tag | TEXT | NOT NULL | Tag name |
+| TagId | INTEGER | NOT NULL | Foreign key to Tags table |
 
 ### __EFMigrationsHistory Table
 
@@ -190,13 +216,16 @@ Entity Framework migrations tracking table.
 6. **TeamMembers to Tasks (Creator)**: One-to-Many (One team member can create multiple tasks)
 7. **TeamMembers to Tasks (Assignee)**: One-to-Many (One team member can be assigned to multiple tasks)
 8. **Tasks to TaskTags**: One-to-Many (One task can have multiple tags)
-9. **Teams to Projects**: One-to-Many (One team can have multiple projects)
+9. **Tags to TaskTags**: One-to-Many (One tag can be associated with multiple tasks)
+10. **Teams to Projects**: One-to-Many (One team can have multiple projects)
 
 ## Recent Schema Changes
 
 1. **Removed CreatorId from Tasks**: The `CreatorId` column has been removed from the Tasks table in favor of using only `CreatorTeamMemberId` to simplify the task assignment model.
 
 2. **Added TeamMember Relationships**: Tasks are now associated with team members from a dedicated team_members table rather than directly with users.
+
+3. **Normalized Tags Table**: Added a dedicated Tags table and updated TaskTags to use TagId instead of storing tag names directly, improving data normalization and query performance.
 
 ## Indexes
 
@@ -208,10 +237,12 @@ The following indexes are defined to optimize query performance:
 4. **IX_Tasks_CreatorTeamMemberId**: Index on CreatorTeamMemberId in Tasks table
 5. **IX_Tasks_ProjectId**: Index on ProjectId in Tasks table
 6. **IX_TaskTags_TaskId**: Index on TaskId in TaskTags table
-7. **IX_TeamMembers_TeamId**: Index on TeamId in TeamMembers table
-8. **IX_TeamMembers_UserId**: Index on UserId in TeamMembers table
-9. **IX_UserSkills_SkillId**: Index on SkillId in UserSkills table
-10. **IX_UserSkills_UserId**: Index on UserId in UserSkills table
+7. **IX_TaskTags_TagId**: Index on TagId in TaskTags table
+8. **IX_Tags_Name**: Index on Name in Tags table
+9. **IX_TeamMembers_TeamId**: Index on TeamId in TeamMembers table
+10. **IX_TeamMembers_UserId**: Index on UserId in TeamMembers table
+11. **IX_UserSkills_SkillId**: Index on SkillId in UserSkills table
+12. **IX_UserSkills_UserId**: Index on UserId in UserSkills table
 
 ## Foreign Key Constraints
 
@@ -223,7 +254,8 @@ The following foreign key constraints ensure data integrity:
 4. **FK_Tasks_TeamMembers_CreatorTeamMemberId**: Tasks.CreatorTeamMemberId references TeamMembers.Id
 5. **FK_Tasks_Users_AssignedToUserId**: Tasks.AssignedToUserId references Users.Id (SET NULL on delete)
 6. **FK_TaskTags_Tasks_TaskId**: TaskTags.TaskId references Tasks.Id (CASCADE DELETE)
-7. **FK_TeamMembers_Teams_TeamId**: TeamMembers.TeamId references Teams.Id (CASCADE DELETE)
-8. **FK_TeamMembers_Users_UserId**: TeamMembers.UserId references Users.Id (CASCADE DELETE)
-9. **FK_UserSkills_Skills_SkillId**: UserSkills.SkillId references Skills.Id (CASCADE DELETE)
-10. **FK_UserSkills_Users_UserId**: UserSkills.UserId references Users.Id (CASCADE DELETE)
+7. **FK_TaskTags_Tags_TagId**: TaskTags.TagId references Tags.Id (CASCADE DELETE)
+8. **FK_TeamMembers_Teams_TeamId**: TeamMembers.TeamId references Teams.Id (CASCADE DELETE)
+9. **FK_TeamMembers_Users_UserId**: TeamMembers.UserId references Users.Id (CASCADE DELETE)
+10. **FK_UserSkills_Skills_SkillId**: UserSkills.SkillId references Skills.Id (CASCADE DELETE)
+11. **FK_UserSkills_Users_UserId**: UserSkills.UserId references Users.Id (CASCADE DELETE)

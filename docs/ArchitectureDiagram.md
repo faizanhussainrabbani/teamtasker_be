@@ -88,6 +88,11 @@ The following diagram illustrates the main components of the TeamTasker applicat
 │  │    Entity     │  │    Entity     │  │    Entity     │  │    Entity     │  │Entity │ │
 │  └───────────────┘  └───────────────┘  └───────────────┘  └───────────────┘  └───────┘ │
 │                                                                                         │
+│  ┌───────────────┐  ┌───────────────┐                                                   │
+│  │     Tag       │  │   TaskTag     │                                                   │
+│  │    Entity     │  │    Entity     │                                                   │
+│  └───────────────┘  └───────────────┘                                                   │
+│                                                                                         │
 │                                    Domain Layer                                         │
 │                                                                                         │
 └─────────────────────────────────────────────────────────────────────────────────────────┘
@@ -99,10 +104,10 @@ The following diagram illustrates the main components of the TeamTasker applicat
 
 The Domain Layer is the core of the application and contains:
 
-- **Entities**: User, Task, Project, Team, TeamMember, Skill, UserSkill, TaskTag
+- **Entities**: User, Task, Project, Team, TeamMember, Skill, UserSkill, Tag, TaskTag
 - **Value Objects**: Address
 - **Domain Events**: TaskCreatedEvent, TaskUpdatedEvent, etc.
-- **Repository Interfaces**: IUserRepository, ITaskRepository, etc.
+- **Repository Interfaces**: IUserRepository, ITaskRepository, ITagRepository, etc.
 - **Domain Services**: Business logic that doesn't fit into entities
 
 This layer has no dependencies on other layers or external frameworks.

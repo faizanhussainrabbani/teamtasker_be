@@ -419,3 +419,6 @@ BE APIs/
 appsettings.Development.json
 appsettings.*.json
 !appsettings.json
+
+# Authentication tokens
+token.txt

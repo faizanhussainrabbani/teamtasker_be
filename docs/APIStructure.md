@@ -55,9 +55,13 @@ Manages task resources.
 | Endpoint | Method | Description | Request Body | Response |
 |----------|--------|-------------|--------------|----------|
 | `/api/tasks` | GET | Gets a list of tasks with optional filtering | Query parameters | Paginated list of tasks |
+| `/api/tasks?includeTags=true` | GET | Gets a list of tasks with their tags | Query parameters | Paginated list of tasks with tags |
+| `/api/tasks?taskType=assigned` | GET | Gets tasks assigned to current user | Query parameters | Paginated list of tasks |
+| `/api/tasks?taskType=created` | GET | Gets tasks created by current user | Query parameters | Paginated list of tasks |
 | `/api/tasks/{id}` | GET | Gets a single task by ID | - | Task details |
-| `/api/tasks` | POST | Creates a new task | Task creation data | Created task |
-| `/api/tasks/{id}` | PATCH | Updates an existing task | Task update data | Updated task |
+| `/api/tasks/{id}?includeTags=true` | GET | Gets a single task by ID with its tags | - | Task details with tags |
+| `/api/tasks` | POST | Creates a new task | Task creation data with tags | Created task |
+| `/api/tasks/{id}` | PUT | Updates an existing task | Task update data with tags | Updated task |
 | `/api/tasks/{id}` | DELETE | Deletes a task | - | No content |
 
 ### Projects API (`/api/projects`)
@@ -217,7 +221,16 @@ Example of a paginated response:
         "teamId": 1,
         "teamRole": "Owner"
       },
-      "tags": ["frontend", "bug"],
+      "tags": [
+        {
+          "id": 1,
+          "name": "frontend"
+        },
+        {
+          "id": 2,
+          "name": "bug"
+        }
+      ],
       "createdDate": "2023-01-01T00:00:00Z",
       "updatedDate": "2023-01-15T00:00:00Z",
       "completedDate": null

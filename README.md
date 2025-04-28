@@ -72,15 +72,18 @@ The following API endpoints are available:
 #### Tasks
 - **GET /api/tasks** - Get all tasks with filtering and pagination
 - **GET /api/tasks/{id}** - Get a specific task by ID
+- **GET /api/tasks?taskType=assigned** - Get tasks assigned to current user
+- **GET /api/tasks?taskType=created** - Get tasks created by current user
+- **GET /api/tasks?includeTags=true** - Get tasks with their tags
 - **POST /api/tasks** - Create a new task
-- **PATCH /api/tasks/{id}** - Update an existing task
+- **PUT /api/tasks/{id}** - Update an existing task
 - **DELETE /api/tasks/{id}** - Delete a task
 
 #### Teams
 - **GET /api/teams** - Get all teams
 - **GET /api/teams/{id}** - Get a specific team by ID
 - **POST /api/teams** - Create a new team
-- **PATCH /api/teams/{id}** - Update an existing team
+- **PUT /api/teams/{id}** - Update an existing team
 - **DELETE /api/teams/{id}** - Delete a team
 - **GET /api/teams/{id}/members** - Get members of a team
 - **POST /api/teams/{id}/members** - Add a member to a team
@@ -174,6 +177,14 @@ The application is designed to be easily transitioned into a microservices archi
 - Modular design for easy extraction of services
 
 For more details on the microservices architecture approach, see the [Architecture Documentation](docs/ArchitectureDiagram.md#microservices-readiness).
+
+## Documentation
+
+For more detailed documentation, see the following:
+
+- [API Structure Documentation](docs/APIStructure.md) - Detailed information about API endpoints, request/response formats, and implementation details
+- [Architecture Diagram](docs/ArchitectureDiagram.md) - Overview of the application architecture, including layers, components, and their interactions
+- [Database Schema](docs/DatabaseSchema.md) - Detailed information about the database schema, including tables, columns, relationships, and constraints
 
 ## Current Status and Future Plans
 
