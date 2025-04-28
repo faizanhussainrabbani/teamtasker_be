@@ -2,6 +2,14 @@
 
 A .NET 8.0 application built with clean architecture principles.
 
+## Documentation
+
+Comprehensive documentation is available in the `docs` folder:
+
+- [Architecture Diagram](docs/ArchitectureDiagram.md) - Detailed architecture diagrams and component relationships
+- [Database Schema](docs/DatabaseSchema.md) - Complete database schema with tables, columns, and relationships
+- [API Structure](docs/APIStructure.md) - RESTful API structure and implementation details
+
 ## Architecture Overview
 
 This solution follows clean architecture principles with the following layers:
@@ -10,6 +18,8 @@ This solution follows clean architecture principles with the following layers:
 - **Application Layer**: Contains business logic and use cases
 - **Infrastructure Layer**: Contains implementation details and external concerns
 - **API Layer**: Contains controllers and API endpoints
+
+For a more detailed architecture overview with diagrams, see the [Architecture Documentation](docs/ArchitectureDiagram.md).
 
 ## Key Features
 
@@ -29,6 +39,8 @@ This solution follows clean architecture principles with the following layers:
 - **TeamTasker.Infrastructure**: Contains data access, external services, and infrastructure concerns
 - **TeamTasker.API**: Contains API controllers and configuration
 - **TeamTasker.SharedKernel**: Contains shared abstractions and base classes
+
+For a detailed database schema, including tables, columns, relationships, and constraints, see the [Database Schema Documentation](docs/DatabaseSchema.md).
 
 ## Getting Started
 
@@ -57,6 +69,23 @@ The following API endpoints are available:
 - **PUT /api/projects/{id}** - Update an existing project
 - **DELETE /api/projects/{id}** - Delete a project
 
+#### Tasks
+- **GET /api/tasks** - Get all tasks with filtering and pagination
+- **GET /api/tasks/{id}** - Get a specific task by ID
+- **POST /api/tasks** - Create a new task
+- **PATCH /api/tasks/{id}** - Update an existing task
+- **DELETE /api/tasks/{id}** - Delete a task
+
+#### Teams
+- **GET /api/teams** - Get all teams
+- **GET /api/teams/{id}** - Get a specific team by ID
+- **POST /api/teams** - Create a new team
+- **PATCH /api/teams/{id}** - Update an existing team
+- **DELETE /api/teams/{id}** - Delete a team
+- **GET /api/teams/{id}/members** - Get members of a team
+- **POST /api/teams/{id}/members** - Add a member to a team
+- **DELETE /api/teams/{id}/members/{memberId}** - Remove a member from a team
+
 #### Authentication
 - **POST /api/auth/register** - Register a new user
 - **POST /api/auth/login** - Login and get JWT token
@@ -71,6 +100,8 @@ The following API endpoints are available:
 - **GET /api/users/{id}** - Get a specific user by ID
 - **GET /api/users/profile** - Get current user profile
 - **PATCH /api/users/profile** - Update current user profile
+
+For more detailed API documentation, including request/response formats and implementation details, see the [API Structure Documentation](docs/APIStructure.md).
 
 ## Testing
 
@@ -142,6 +173,8 @@ The application is designed to be easily transitioned into a microservices archi
 - Independent data persistence capabilities
 - Modular design for easy extraction of services
 
+For more details on the microservices architecture approach, see the [Architecture Documentation](docs/ArchitectureDiagram.md#microservices-readiness).
+
 ## Current Status and Future Plans
 
 ### Implemented Features
@@ -150,20 +183,23 @@ The application is designed to be easily transitioned into a microservices archi
 - ✅ CQRS pattern with MediatR
 - ✅ Entity Framework Core 8.0 with SQLite
 - ✅ Project management functionality (CRUD operations)
+- ✅ Task management functionality (CRUD operations)
+- ✅ Team and team member management
 - ✅ Authentication and Authorization with JWT
 - ✅ User management functionality with profile management
 - ✅ Password reset and change functionality
-- ✅ Pagination, filtering, and sorting for user listings
+- ✅ Pagination, filtering, and sorting for listings
 - ✅ Global exception handling and improved error responses
 - ✅ Improved validation with FluentValidation
 - ✅ Unit tests for all layers
 - ✅ Swagger documentation
+- ✅ Comprehensive documentation (Architecture, Database Schema, API Structure)
 
 ### Planned Features
 
-- ⏳ Task management functionality
 - ⏳ Role-based authorization
 - ⏳ Advanced user management for administrators
 - ⏳ Email notifications with real email service
 - ⏳ Improved test coverage (target: 80%)
 - ⏳ CI/CD pipeline
+- ⏳ API versioning
