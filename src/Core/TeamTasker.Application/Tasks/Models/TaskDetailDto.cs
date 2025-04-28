@@ -79,7 +79,7 @@ namespace TeamTasker.Application.Tasks.Models
         /// Creator ID (User ID) - Deprecated, use CreatorTeamMemberId instead
         /// </summary>
         [Obsolete("Use CreatorTeamMemberId instead")]
-        public int CreatorId { get; set; }
+        public int? CreatorId { get; set; }
 
         /// <summary>
         /// Creator information

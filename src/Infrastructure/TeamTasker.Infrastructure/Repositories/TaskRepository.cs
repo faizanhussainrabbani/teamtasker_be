@@ -195,8 +195,8 @@ namespace TeamTasker.Infrastructure.Repositories
                         }
                         else
                         {
-                            // Fallback to user ID if no team members found (for backward compatibility)
-                            query = query.Where(t => t.CreatorId == currentUserId.Value && t.AssignedToUserId == currentUserId.Value);
+                            // If no team members found, user can't have any tasks that match the criteria
+                            query = query.Where(t => false); // Empty result set
                         }
                         break;
                     case "team":
@@ -227,8 +227,8 @@ namespace TeamTasker.Infrastructure.Repositories
                         }
                         else
                         {
-                            // Fallback to user ID if no team members found
-                            query = query.Where(t => t.CreatorId == currentUserId.Value);
+                            // If no team members found, user can't have created any tasks
+                            query = query.Where(t => false); // Empty result set
                         }
                         break;
                     case "unassigned":

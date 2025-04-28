@@ -47,8 +47,7 @@ namespace TeamTasker.Domain.Entities
         public int? AssignedToUserId { get; private set; }
         [Obsolete("Use AssignedToTeamMember instead")]
         public User? AssignedToUser { get; private set; }
-        [Obsolete("Use CreatorTeamMemberId instead")]
-        public int CreatorId { get; set; } // Allow setting for now
+        // CreatorId has been removed in favor of CreatorTeamMemberId
         [Obsolete("Use CreatorTeamMember instead")]
         public User? Creator { get; private set; }
         public DateTime CreatedDate { get; private set; }

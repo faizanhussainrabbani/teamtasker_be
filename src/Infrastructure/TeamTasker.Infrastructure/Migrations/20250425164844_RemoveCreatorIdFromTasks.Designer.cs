@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TeamTasker.Infrastructure.Data;
 
@@ -10,9 +11,11 @@ using TeamTasker.Infrastructure.Data;
 namespace TeamTasker.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250425164844_RemoveCreatorIdFromTasks")]
+    partial class RemoveCreatorIdFromTasks
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.4");
@@ -108,7 +111,7 @@ namespace TeamTasker.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("CreatorId")
+                    b.Property<int>("CreatorId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int?>("CreatorTeamMemberId")
@@ -392,7 +395,9 @@ namespace TeamTasker.Infrastructure.Migrations
 
                     b.HasOne("TeamTasker.Domain.Entities.User", "Creator")
                         .WithMany()
-                        .HasForeignKey("CreatorId");
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("TeamTasker.Domain.Entities.TeamMember", "CreatorTeamMember")
                         .WithMany()

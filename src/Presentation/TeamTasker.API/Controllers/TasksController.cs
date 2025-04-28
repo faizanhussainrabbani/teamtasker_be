@@ -175,8 +175,8 @@ namespace TeamTasker.API.Controllers
                         Avatar = t.AssignedToUser.Avatar,
                         Initials = t.AssignedToUser.Initials
                     } : null,
-                    // Prefer team member information for creator if available
-                    CreatorId = t.CreatorTeamMember?.UserId ?? t.CreatorId,
+                    // Use team member information for creator
+                    CreatorId = t.CreatorTeamMember?.UserId,
                     CreatorTeamMemberId = t.CreatorTeamMemberId,
                     Creator = filterParams.IncludeCreator ?
                         (t.CreatorTeamMember?.User != null ? new TeamTasker.Application.Tasks.Models.UserMinimalDto
@@ -269,9 +269,9 @@ namespace TeamTasker.API.Controllers
                         Avatar = task.AssignedToUser.Avatar,
                         Initials = task.AssignedToUser.Initials
                     } : null,
-                    // Prefer team member information if available
+                    // Use team member information
                     CreatorTeamMemberId = task.CreatorTeamMemberId,
-                    CreatorId = task.CreatorTeamMember?.UserId ?? task.CreatorId,
+                    CreatorId = task.CreatorTeamMember?.UserId,
                     Creator = task.CreatorTeamMember?.User != null ? new TeamTasker.Application.Tasks.Models.UserMinimalDto
                     {
                         Id = task.CreatorTeamMember.User.Id,
@@ -414,12 +414,7 @@ namespace TeamTasker.API.Controllers
                 var creatorTeamMemberId = await _teamMemberRepository.EnsureUserHasTeamMembershipAsync(currentUserId.Value);
                 task.SetCreatorTeamMember(creatorTeamMemberId);
 
-                // For backward compatibility, also set the creator ID directly
-                var creatorIdProperty = typeof(Domain.Entities.Task).GetProperty("CreatorId");
-                if (creatorIdProperty != null)
-                {
-                    creatorIdProperty.SetValue(task, currentUserId.Value);
-                }
+                // CreatorId has been removed in favor of CreatorTeamMemberId
 
                 // Set status if different from default
                 if (status != DomainTaskStatus.ToDo)
@@ -489,9 +484,9 @@ namespace TeamTasker.API.Controllers
                         Avatar = createdTask.AssignedToUser.Avatar,
                         Initials = createdTask.AssignedToUser.Initials
                     } : null,
-                    // Prefer team member information if available
+                    // Use team member information
                     CreatorTeamMemberId = createdTask.CreatorTeamMemberId,
-                    CreatorId = createdTask.CreatorTeamMember?.UserId ?? createdTask.CreatorId,
+                    CreatorId = createdTask.CreatorTeamMember?.UserId,
                     Creator = createdTask.CreatorTeamMember?.User != null ? new TeamTasker.Application.Tasks.Models.UserMinimalDto
                     {
                         Id = createdTask.CreatorTeamMember.User.Id,
@@ -725,9 +720,9 @@ namespace TeamTasker.API.Controllers
                         Avatar = updatedTask.AssignedToUser.Avatar,
                         Initials = updatedTask.AssignedToUser.Initials
                     } : null,
-                    // Prefer team member information if available
+                    // Use team member information
                     CreatorTeamMemberId = updatedTask.CreatorTeamMemberId,
-                    CreatorId = updatedTask.CreatorTeamMember?.UserId ?? updatedTask.CreatorId,
+                    CreatorId = updatedTask.CreatorTeamMember?.UserId,
                     Creator = updatedTask.CreatorTeamMember?.User != null ? new TeamTasker.Application.Tasks.Models.UserMinimalDto
                     {
                         Id = updatedTask.CreatorTeamMember.User.Id,
