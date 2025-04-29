@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using TeamTasker.Domain.Events;
 using TeamTasker.Domain.Exceptions;
 using TeamTasker.SharedKernel;
+using TeamTasker.SharedKernel.Interfaces;
 
 namespace TeamTasker.Domain.Entities
 {

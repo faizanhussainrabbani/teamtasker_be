@@ -379,7 +379,7 @@ namespace TeamTasker.API.Controllers
                 }
 
                 // Create task
-                var task = new Domain.Entities.Task(
+                var task = Domain.Entities.Task.Create(
                     request.Title,
                     request.Description,
                     request.DueDate ?? DateTime.UtcNow.AddDays(7),

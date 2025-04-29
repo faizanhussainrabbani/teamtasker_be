@@ -39,7 +39,7 @@ namespace TeamTasker.Application.Common.Behaviors
             if (elapsedMilliseconds > 500)
             {
                 var requestName = typeof(TRequest).Name;
-                var userId = _currentUserService.UserId ?? "anonymous";
+                var userId = _currentUserService.UserId?.ToString() ?? "anonymous";
                 var userName = _currentUserService.Username ?? "Anonymous";
 
                 _logger.LogWarning("Long running request: {RequestName} ({ElapsedMilliseconds} milliseconds) for user {UserId} {UserName}",

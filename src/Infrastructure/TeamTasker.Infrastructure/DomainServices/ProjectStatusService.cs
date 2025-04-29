@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 using TeamTasker.Domain.Entities;
 using TeamTasker.Domain.Services;
 using TeamTasker.Infrastructure.Data;
+using DomainTask = TeamTasker.Domain.Entities.Task;
+using DomainTaskStatus = TeamTasker.Domain.Entities.TaskStatus;
+using Task = System.Threading.Tasks.Task;
 
 namespace TeamTasker.Infrastructure.DomainServices
 {
@@ -31,8 +34,8 @@ namespace TeamTasker.Infrastructure.DomainServices
             // A project can be completed if all its tasks are either Done or Cancelled
             var incompleteTasks = await _dbContext.Tasks
                 .Where(t => t.ProjectId == project.Id &&
-                           t.Status != TaskStatus.Done &&
-                           t.Status != TaskStatus.Cancelled)
+                           t.Status != DomainTaskStatus.Done &&
+                           t.Status != DomainTaskStatus.Cancelled)
                 .CountAsync();
 
             return incompleteTasks == 0;
@@ -83,13 +86,13 @@ namespace TeamTasker.Infrastructure.DomainServices
                 return;
 
             // Check if all tasks are completed or cancelled
-            bool allTasksCompleted = tasks.All(t => t.Status == TaskStatus.Done || t.Status == TaskStatus.Cancelled);
-            
+            bool allTasksCompleted = tasks.All(t => t.Status == DomainTaskStatus.Done || t.Status == DomainTaskStatus.Cancelled);
+
             // Check if any tasks are in progress
-            bool anyTaskInProgress = tasks.Any(t => t.Status == TaskStatus.InProgress);
-            
+            bool anyTaskInProgress = tasks.Any(t => t.Status == DomainTaskStatus.InProgress);
+
             // Check if all tasks are not started
-            bool allTasksNotStarted = tasks.All(t => t.Status == TaskStatus.ToDo);
+            bool allTasksNotStarted = tasks.All(t => t.Status == DomainTaskStatus.ToDo);
 
             // Update project status based on task status
             if (allTasksCompleted)

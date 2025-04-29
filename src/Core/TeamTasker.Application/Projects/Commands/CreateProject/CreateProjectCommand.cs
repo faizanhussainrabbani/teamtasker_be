@@ -29,7 +29,7 @@ namespace TeamTasker.Application.Projects.Commands.CreateProject
 
         public async Task<int> Handle(CreateProjectCommand request, CancellationToken cancellationToken)
         {
-            var project = new Project(
+            var project = Project.Create(
                 request.Name,
                 request.Description,
                 request.StartDate,

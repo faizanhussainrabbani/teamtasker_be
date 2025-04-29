@@ -15,6 +15,7 @@ namespace TeamTasker.Application.Common.Behaviors
     /// <typeparam name="TResponse">Response type</typeparam>
     public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TRequest : IRequest<TResponse>
+        where TResponse : class
     {
         private readonly IEnumerable<IValidator<TRequest>> _validators;
 

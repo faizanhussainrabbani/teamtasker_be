@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
 using TeamTasker.Application.Common.Interfaces;
 using TeamTasker.Domain.Interfaces;
+using TeamTasker.Infrastructure.Extensions;
 using TeamTasker.Infrastructure.Repositories;
 using TeamTasker.SharedKernel.Interfaces;
 
@@ -20,14 +21,14 @@ namespace TeamTasker.Infrastructure.Data
         private readonly ApplicationDbContext _dbContext;
         private readonly ILogger<UnitOfWork> _logger;
         private readonly IDomainEventDispatcher _dispatcher;
-        private IDbContextTransaction _transaction;
+        private IDbContextTransaction? _transaction;
         private readonly Dictionary<Type, object> _repositories = new Dictionary<Type, object>();
 
-        private IProjectRepository _projectRepository;
-        private ITaskRepository _taskRepository;
-        private ITeamRepository _teamRepository;
-        private ITeamMemberRepository _teamMemberRepository;
-        private IUserRepository _userRepository;
+        private IProjectRepository? _projectRepository;
+        private ITaskRepository? _taskRepository;
+        private ITeamRepository? _teamRepository;
+        private ITeamMemberRepository? _teamMemberRepository;
+        private IUserRepository? _userRepository;
 
         public UnitOfWork(
             ApplicationDbContext dbContext,
@@ -39,34 +40,42 @@ namespace TeamTasker.Infrastructure.Data
             _dispatcher = dispatcher ?? throw new ArgumentNullException(nameof(dispatcher));
         }
 
-        public IProjectRepository ProjectRepository => 
-            _projectRepository ??= new ProjectRepository(_dbContext, _logger);
+        public IProjectRepository ProjectRepository =>
+            _projectRepository ??= new ProjectRepository(_dbContext,
+                (ILogger<ProjectRepository>)_logger.CreateLoggerInstance(typeof(ProjectRepository)));
 
-        public ITaskRepository TaskRepository => 
-            _taskRepository ??= new TaskRepository(_dbContext, _logger);
+        public ITaskRepository TaskRepository =>
+            _taskRepository ??= new TaskRepository(_dbContext,
+                (ILogger<TaskRepository>)_logger.CreateLoggerInstance(typeof(TaskRepository)));
 
-        public ITeamRepository TeamRepository => 
-            _teamRepository ??= new TeamRepository(_dbContext, _logger);
+        public ITeamRepository TeamRepository =>
+            _teamRepository ??= new TeamRepository(_dbContext,
+                (ILogger<TeamRepository>)_logger.CreateLoggerInstance(typeof(TeamRepository)));
 
-        public ITeamMemberRepository TeamMemberRepository => 
-            _teamMemberRepository ??= new TeamMemberRepository(_dbContext, _logger);
+        public ITeamMemberRepository TeamMemberRepository =>
+            _teamMemberRepository ??= new TeamMemberRepository(_dbContext,
+                (ILogger<TeamMemberRepository>)_logger.CreateLoggerInstance(typeof(TeamMemberRepository)));
 
-        public IUserRepository UserRepository => 
-            _userRepository ??= new UserRepository(_dbContext, _logger);
+        public IUserRepository UserRepository =>
+            _userRepository ??= new UserRepository(_dbContext,
+                (ILogger<UserRepository>)_logger.CreateLoggerInstance(typeof(UserRepository)));
 
-        public IRepository<TEntity> Repository<TEntity>() where TEntity : class
+        public IRepository<TEntity> Repository<TEntity>() where TEntity : TeamTasker.SharedKernel.BaseEntity
         {
             var entityType = typeof(TEntity);
 
             if (!_repositories.ContainsKey(entityType))
             {
                 var repositoryType = typeof(EfRepository<>);
-                var repositoryInstance = Activator.CreateInstance(
-                    repositoryType.MakeGenericType(entityType), 
-                    _dbContext, 
-                    _logger);
+                var loggerType = typeof(ILogger<>).MakeGenericType(repositoryType.MakeGenericType(entityType));
+                var logger = _logger.CreateLoggerInstance(repositoryType.MakeGenericType(entityType));
 
-                _repositories.Add(entityType, repositoryInstance);
+                var repositoryInstance = Activator.CreateInstance(
+                    repositoryType.MakeGenericType(entityType),
+                    _dbContext,
+                    logger);
+
+                _repositories.Add(entityType, repositoryInstance!);
             }
 
             return (IRepository<TEntity>)_repositories[entityType];
@@ -99,7 +108,7 @@ namespace TeamTasker.Infrastructure.Data
             finally
             {
                 await _transaction.DisposeAsync();
-                _transaction = null;
+                _transaction = null!;
             }
         }
 
@@ -118,7 +127,7 @@ namespace TeamTasker.Infrastructure.Data
             finally
             {
                 await _transaction.DisposeAsync();
-                _transaction = null;
+                _transaction = null!;
             }
         }
 

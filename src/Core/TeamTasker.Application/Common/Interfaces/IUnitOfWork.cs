@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using TeamTasker.Domain.Interfaces;
+using TeamTasker.SharedKernel.Interfaces;
 
 namespace TeamTasker.Application.Common.Interfaces
 {
@@ -13,7 +14,7 @@ namespace TeamTasker.Application.Common.Interfaces
         /// <summary>
         /// Gets the repository for the specified entity type
         /// </summary>
-        IRepository<TEntity> Repository<TEntity>() where TEntity : class;
+        IRepository<TEntity> Repository<TEntity>() where TEntity : TeamTasker.SharedKernel.BaseEntity;
 
         /// <summary>
         /// Gets the project repository

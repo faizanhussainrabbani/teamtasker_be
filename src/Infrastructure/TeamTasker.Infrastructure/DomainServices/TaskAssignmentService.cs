@@ -6,6 +6,9 @@ using TeamTasker.Domain.Entities;
 using TeamTasker.Domain.Exceptions;
 using TeamTasker.Domain.Services;
 using TeamTasker.Infrastructure.Data;
+using DomainTask = TeamTasker.Domain.Entities.Task;
+using DomainTaskStatus = TeamTasker.Domain.Entities.TaskStatus;
+using Task = System.Threading.Tasks.Task;
 
 namespace TeamTasker.Infrastructure.DomainServices
 {
@@ -25,7 +28,7 @@ namespace TeamTasker.Infrastructure.DomainServices
         /// <summary>
         /// Checks if a team member can be assigned to a task
         /// </summary>
-        public async Task<bool> CanAssignTaskToTeamMemberAsync(Entities.Task task, TeamMember teamMember)
+        public async Task<bool> CanAssignTaskToTeamMemberAsync(DomainTask task, TeamMember teamMember)
         {
             if (task == null)
                 throw new ArgumentNullException(nameof(task));
@@ -34,7 +37,7 @@ namespace TeamTasker.Infrastructure.DomainServices
                 throw new ArgumentNullException(nameof(teamMember));
 
             // Check if task is in a state that can be assigned
-            if (task.Status == TaskStatus.Cancelled || task.Status == TaskStatus.Done)
+            if (task.Status == DomainTaskStatus.Cancelled || task.Status == DomainTaskStatus.Done)
                 return false;
 
             // Check if team member is active
@@ -55,8 +58,8 @@ namespace TeamTasker.Infrastructure.DomainServices
             // Check if team member has too many active tasks
             int activeTaskCount = await _dbContext.Tasks
                 .CountAsync(t => t.AssignedToTeamMemberId == teamMember.Id &&
-                                t.Status != TaskStatus.Done &&
-                                t.Status != TaskStatus.Cancelled);
+                                t.Status != DomainTaskStatus.Done &&
+                                t.Status != DomainTaskStatus.Cancelled);
 
             return activeTaskCount < MaxTasksPerTeamMember;
         }
@@ -64,7 +67,7 @@ namespace TeamTasker.Infrastructure.DomainServices
         /// <summary>
         /// Assigns a task to a team member with validation
         /// </summary>
-        public async Task AssignTaskToTeamMemberAsync(Entities.Task task, TeamMember teamMember)
+        public async Task AssignTaskToTeamMemberAsync(DomainTask task, TeamMember teamMember)
         {
             if (task == null)
                 throw new ArgumentNullException(nameof(task));
@@ -87,8 +90,8 @@ namespace TeamTasker.Infrastructure.DomainServices
         {
             int activeTaskCount = await _dbContext.Tasks
                 .CountAsync(t => t.AssignedToTeamMemberId == teamMemberId &&
-                                t.Status != TaskStatus.Done &&
-                                t.Status != TaskStatus.Cancelled);
+                                t.Status != DomainTaskStatus.Done &&
+                                t.Status != DomainTaskStatus.Cancelled);
 
             return (int)Math.Round((double)activeTaskCount / MaxTasksPerTeamMember * 100);
         }

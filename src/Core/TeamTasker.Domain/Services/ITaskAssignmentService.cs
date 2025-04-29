@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using TeamTasker.Domain.Entities;
+using Task = System.Threading.Tasks.Task;
 
 namespace TeamTasker.Domain.Services
 {

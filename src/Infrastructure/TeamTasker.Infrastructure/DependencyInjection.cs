@@ -38,17 +38,19 @@ namespace TeamTasker.Infrastructure
             // Register repositories
             services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
 
-            // Enable caching for repositories if needed
-            if (configuration.GetValue<bool>("UseRepositoryCaching", false))
-            {
-                services.Decorate(typeof(IRepository<>), typeof(CachedRepositoryDecorator<>));
-            }
-
+            // Register specific repositories first
             services.AddScoped<IProjectRepository, ProjectRepository>();
             services.AddScoped<ITaskRepository, TaskRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ITeamRepository, TeamRepository>();
             services.AddScoped<ITeamMemberRepository, TeamMemberRepository>();
+
+            // Enable caching for repositories if needed
+            // Temporarily disabled until we fix the decoration issue
+            // if (configuration.GetValue<bool>("UseRepositoryCaching", false))
+            // {
+            //     services.Decorate(typeof(IRepository<>), typeof(CachedRepositoryDecorator<>));
+            // }
 
             // Register application services
             services.AddScoped<ICurrentUserService, CurrentUserService>();
