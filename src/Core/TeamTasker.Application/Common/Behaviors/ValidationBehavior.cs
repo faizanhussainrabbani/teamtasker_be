@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation;
 using MediatR;
+using TeamTasker.Application.Common.Models;
 
 namespace TeamTasker.Application.Common.Behaviors
 {
@@ -24,19 +25,39 @@ namespace TeamTasker.Application.Common.Behaviors
 
         public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
-            if (_validators.Any())
+            if (!_validators.Any())
             {
-                var context = new ValidationContext<TRequest>(request);
+                return await next();
+            }
 
-                var validationResults = await Task.WhenAll(
-                    _validators.Select(v => v.ValidateAsync(context, cancellationToken)));
+            var context = new ValidationContext<TRequest>(request);
 
-                var failures = validationResults
-                    .SelectMany(r => r.Errors)
-                    .Where(f => f != null)
-                    .ToList();
+            var validationResults = await Task.WhenAll(
+                _validators.Select(v => v.ValidateAsync(context, cancellationToken)));
 
-                if (failures.Count != 0)
+            var failures = validationResults
+                .SelectMany(r => r.Errors)
+                .Where(f => f != null)
+                .ToList();
+
+            if (failures.Count != 0)
+            {
+                var failureMessages = failures.Select(f => f.ErrorMessage).ToList();
+                var failureMessage = "Validation failed: " + string.Join(", ", failureMessages);
+
+                // If the response type is CommandResponse<T> or CommandResponse, return a failed response
+                if (typeof(TResponse).IsGenericType &&
+                    typeof(TResponse).GetGenericTypeDefinition() == typeof(CommandResponse<>))
+                {
+                    // Create a failed response using reflection
+                    var failMethod = typeof(TResponse).GetMethod("Fail", new[] { typeof(string), typeof(List<string>) });
+                    return failMethod.Invoke(null, new object[] { failureMessage, failureMessages }) as TResponse;
+                }
+                else if (typeof(TResponse) == typeof(CommandResponse))
+                {
+                    return CommandResponse.Fail(failureMessage, failureMessages) as TResponse;
+                }
+                else
                 {
                     throw new ValidationException(failures);
                 }

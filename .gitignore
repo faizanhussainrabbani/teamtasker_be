@@ -422,3 +422,8 @@ appsettings.*.json
 
 # Authentication tokens
 token.txt
+
+# PDF and text files
+*.pdf
+clean-architecture-book*.txt
+improved_pdf_extract.py

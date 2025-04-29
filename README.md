@@ -9,6 +9,7 @@ Comprehensive documentation is available in the `docs` folder:
 - [Architecture Diagram](docs/ArchitectureDiagram.md) - Detailed architecture diagrams and component relationships
 - [Database Schema](docs/DatabaseSchema.md) - Complete database schema with tables, columns, and relationships
 - [API Structure](docs/APIStructure.md) - RESTful API structure and implementation details
+- [Clean Architecture Improvements](docs/CleanArchitectureImprovements.md) - Improvements made to align with clean architecture principles
 
 ## Architecture Overview
 
@@ -25,10 +26,16 @@ For a more detailed architecture overview with diagrams, see the [Architecture D
 
 - Clean Architecture with clear separation of concerns
 - Domain-Driven Design principles
+- Rich Domain Model with encapsulated business logic
+- Value Objects for domain concepts
+- Domain Services for complex business logic
 - CQRS pattern with MediatR
 - Entity Framework Core 8.0
-- Repository pattern
-- Fluent Validation
+- Repository pattern with Unit of Work
+- Caching strategy for performance optimization
+- Fluent Validation with validation pipeline
+- Standardized command response pattern
+- Global exception handling
 - Unit testing with xUnit
 - Swagger documentation
 
@@ -185,14 +192,20 @@ For more detailed documentation, see the following:
 - [API Structure Documentation](docs/APIStructure.md) - Detailed information about API endpoints, request/response formats, and implementation details
 - [Architecture Diagram](docs/ArchitectureDiagram.md) - Overview of the application architecture, including layers, components, and their interactions
 - [Database Schema](docs/DatabaseSchema.md) - Detailed information about the database schema, including tables, columns, relationships, and constraints
+- [Clean Architecture Improvements](docs/CleanArchitectureImprovements.md) - Detailed information about the improvements made to align with clean architecture principles
 
 ## Current Status and Future Plans
 
 ### Implemented Features
 
 - ✅ Clean Architecture with Domain, Application, Infrastructure, and API layers
+- ✅ Rich Domain Model with encapsulated business logic
+- ✅ Value Objects for domain concepts (Email, DateRange, Percentage)
+- ✅ Domain Services for complex business logic
 - ✅ CQRS pattern with MediatR
 - ✅ Entity Framework Core 8.0 with SQLite
+- ✅ Repository pattern with Unit of Work
+- ✅ Caching strategy for performance optimization
 - ✅ Project management functionality (CRUD operations)
 - ✅ Task management functionality (CRUD operations)
 - ✅ Team and team member management
@@ -201,10 +214,12 @@ For more detailed documentation, see the following:
 - ✅ Password reset and change functionality
 - ✅ Pagination, filtering, and sorting for listings
 - ✅ Global exception handling and improved error responses
+- ✅ Standardized command response pattern
 - ✅ Improved validation with FluentValidation
+- ✅ Performance monitoring for long-running requests
 - ✅ Unit tests for all layers
 - ✅ Swagger documentation
-- ✅ Comprehensive documentation (Architecture, Database Schema, API Structure)
+- ✅ Comprehensive documentation (Architecture, Database Schema, API Structure, Clean Architecture Improvements)
 
 ### Planned Features
 

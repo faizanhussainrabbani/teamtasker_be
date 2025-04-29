@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using TeamTasker.Application.Common.Exceptions;
+using TeamTasker.Domain.Exceptions;
 
 namespace TeamTasker.API.Middleware
 {
@@ -38,7 +39,7 @@ namespace TeamTasker.API.Middleware
         private static async Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
             context.Response.ContentType = "application/json";
-            
+
             var statusCode = GetStatusCode(exception);
             var response = new
             {
@@ -49,14 +50,14 @@ namespace TeamTasker.API.Middleware
             };
 
             context.Response.StatusCode = statusCode;
-            
+
             var options = new JsonSerializerOptions
             {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase
             };
-            
+
             var json = JsonSerializer.Serialize(response, options);
-            
+
             await context.Response.WriteAsync(json);
         }
 
@@ -69,6 +70,7 @@ namespace TeamTasker.API.Middleware
                 ForbiddenAccessException => (int)HttpStatusCode.Forbidden,
                 BadRequestException => (int)HttpStatusCode.BadRequest,
                 ConflictException => (int)HttpStatusCode.Conflict,
+                DomainException => (int)HttpStatusCode.BadRequest,
                 _ => (int)HttpStatusCode.InternalServerError
             };
         }
@@ -82,6 +84,7 @@ namespace TeamTasker.API.Middleware
                 ForbiddenAccessException => "Forbidden",
                 BadRequestException => "Bad Request",
                 ConflictException => "Conflict",
+                DomainException => "Domain Rule Violation",
                 _ => "Server Error"
             };
         }
@@ -92,7 +95,7 @@ namespace TeamTasker.API.Middleware
             {
                 return validationException.Errors;
             }
-            
+
             return null;
         }
     }

@@ -8,8 +8,10 @@ using Microsoft.IdentityModel.Tokens;
 using TeamTasker.Application.Common.Interfaces;
 using TeamTasker.Application.Common.Models;
 using TeamTasker.Domain.Interfaces;
+using TeamTasker.Domain.Services;
 using TeamTasker.Infrastructure.Authentication;
 using TeamTasker.Infrastructure.Data;
+using TeamTasker.Infrastructure.DomainServices;
 using TeamTasker.Infrastructure.Repositories;
 using TeamTasker.Infrastructure.Services;
 using TeamTasker.Infrastructure.Settings;
@@ -31,17 +33,29 @@ namespace TeamTasker.Infrastructure
 
             services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
             services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             // Register repositories
             services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
+
+            // Enable caching for repositories if needed
+            if (configuration.GetValue<bool>("UseRepositoryCaching", false))
+            {
+                services.Decorate(typeof(IRepository<>), typeof(CachedRepositoryDecorator<>));
+            }
+
             services.AddScoped<IProjectRepository, ProjectRepository>();
             services.AddScoped<ITaskRepository, TaskRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ITeamRepository, TeamRepository>();
             services.AddScoped<ITeamMemberRepository, TeamMemberRepository>();
 
-            // Register services
+            // Register application services
             services.AddScoped<ICurrentUserService, CurrentUserService>();
+
+            // Register domain services
+            services.AddScoped<ITaskAssignmentService, TaskAssignmentService>();
+            services.AddScoped<IProjectStatusService, ProjectStatusService>();
 
             // Register JWT services
             var jwtSettings = new JwtSettings();
@@ -56,8 +70,9 @@ namespace TeamTasker.Infrastructure
             services.AddSingleton<IEmailService, EmailService>();
             services.AddSingleton<IPasswordResetTokenService, PasswordResetTokenService>();
 
-            // Register distributed cache for token storage
+            // Register distributed cache for token storage and caching
             services.AddDistributedMemoryCache();
+            services.AddScoped<ICachingService, DistributedCachingService>();
 
             services.AddAuthentication(options =>
             {
