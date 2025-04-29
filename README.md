@@ -10,6 +10,7 @@ Comprehensive documentation is available in the `docs` folder:
 - [Database Schema](docs/DatabaseSchema.md) - Complete database schema with tables, columns, and relationships
 - [API Structure](docs/APIStructure.md) - RESTful API structure and implementation details
 - [Clean Architecture Improvements](docs/CleanArchitectureImprovements.md) - Improvements made to align with clean architecture principles
+- [User Guide](docs/user-guide.md) - Business-oriented guide to the main features and usage of TeamTasker
 
 ## Architecture Overview
 
@@ -193,6 +194,7 @@ For more detailed documentation, see the following:
 - [Architecture Diagram](docs/ArchitectureDiagram.md) - Overview of the application architecture, including layers, components, and their interactions
 - [Database Schema](docs/DatabaseSchema.md) - Detailed information about the database schema, including tables, columns, relationships, and constraints
 - [Clean Architecture Improvements](docs/CleanArchitectureImprovements.md) - Detailed information about the improvements made to align with clean architecture principles
+- [User Guide](docs/user-guide.md) - Business-oriented guide to the main features and usage of TeamTasker
 
 ## Current Status and Future Plans
 
@@ -219,7 +221,7 @@ For more detailed documentation, see the following:
 - ✅ Performance monitoring for long-running requests
 - ✅ Unit tests for all layers
 - ✅ Swagger documentation
-- ✅ Comprehensive documentation (Architecture, Database Schema, API Structure, Clean Architecture Improvements)
+- ✅ Comprehensive documentation (Architecture, Database Schema, API Structure, Clean Architecture Improvements, User Guide)
 
 ### Planned Features
 
