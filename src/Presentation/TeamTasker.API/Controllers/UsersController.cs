@@ -173,13 +173,21 @@ namespace TeamTasker.API.Controllers
                     return NotFound(new { message = "User not found" });
                 }
 
-                // Load user skills
+                // Load user skills with skill details
                 var dbContext = _dbContext as DbContext;
                 if (dbContext != null)
                 {
                     await dbContext.Entry(user)
                         .Collection(u => u.Skills)
                         .LoadAsync();
+
+                    // Load the Skill navigation property for each UserSkill
+                    foreach (var userSkill in user.Skills)
+                    {
+                        await dbContext.Entry(userSkill)
+                            .Reference(us => us.Skill)
+                            .LoadAsync();
+                    }
                 }
 
                 // Map to DTO
@@ -311,6 +319,96 @@ namespace TeamTasker.API.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error updating profile");
+                return StatusCode(500, new { message = "An error occurred while processing your request" });
+            }
+        }
+
+        /// <summary>
+        /// Update current user skills
+        /// </summary>
+        /// <param name="request">Update skills request</param>
+        /// <returns>Updated skills</returns>
+        [HttpPut("profile/skills")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<ActionResult<List<UserSkillDto>>> UpdateUserSkills(UpdateUserSkillsRequest request)
+        {
+            try
+            {
+                var currentUserId = _currentUserService.UserId;
+                if (currentUserId == null)
+                {
+                    return Unauthorized(new { message = "Invalid token" });
+                }
+
+                var user = await _userRepository.GetByIdAsync(currentUserId.Value);
+                if (user == null)
+                {
+                    return Unauthorized(new { message = "User not found" });
+                }
+
+                // Load existing skills with skill details
+                var dbContext = _dbContext as DbContext;
+                if (dbContext != null)
+                {
+                    await dbContext.Entry(user)
+                        .Collection(u => u.Skills)
+                        .LoadAsync();
+
+                    // Load the Skill navigation property for each UserSkill
+                    foreach (var userSkill in user.Skills)
+                    {
+                        await dbContext.Entry(userSkill)
+                            .Reference(us => us.Skill)
+                            .LoadAsync();
+                    }
+                }
+
+                // Clear existing skills
+                user.Skills.Clear();
+
+                // Add new skills
+                foreach (var skillDto in request.Skills)
+                {
+                    // Find or create skill
+                    var skill = await _dbContext.Skills.FirstOrDefaultAsync(s => s.Name == skillDto.Name);
+                    if (skill == null)
+                    {
+                        skill = new Skill(skillDto.Name, "General", "User-defined skill");
+                        _dbContext.Skills.Add(skill);
+                        await _dbContext.SaveChangesAsync(default); // Save to get the ID
+                    }
+
+                    // Add user skill
+                    var userSkill = new UserSkill(user.Id, skill.Id, skillDto.Level, skillDto.YearsOfExperience);
+                    user.Skills.Add(userSkill);
+                }
+
+                await _userRepository.UpdateAsync(user);
+
+                // Load the Skill navigation property for the newly added skills
+                foreach (var userSkill in user.Skills)
+                {
+                    await dbContext.Entry(userSkill)
+                        .Reference(us => us.Skill)
+                        .LoadAsync();
+                }
+
+                // Return updated skills
+                var updatedSkills = user.Skills.Select(s => new UserSkillDto
+                {
+                    Id = s.SkillId,
+                    Name = s.Skill?.Name ?? "Unknown Skill",
+                    Level = s.Level,
+                    YearsOfExperience = s.YearsOfExperience
+                }).ToList();
+
+                return Ok(updatedSkills);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error updating user skills");
                 return StatusCode(500, new { message = "An error occurred while processing your request" });
             }
         }

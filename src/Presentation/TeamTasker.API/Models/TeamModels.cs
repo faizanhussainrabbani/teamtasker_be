@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using TeamTasker.Application.Common.Models;
 
 namespace TeamTasker.API.Controllers
@@ -41,13 +42,20 @@ namespace TeamTasker.API.Controllers
         public UserMinimalDto Lead { get; set; }
 
         /// <summary>
+        /// Number of team members
+        /// </summary>
+        public int MemberCount { get; set; }
+
+        /// <summary>
         /// Created date
         /// </summary>
+        [JsonPropertyName("createdDate")]
         public DateTime CreatedDate { get; set; }
 
         /// <summary>
         /// Updated date
         /// </summary>
+        [JsonPropertyName("updatedDate")]
         public DateTime UpdatedDate { get; set; }
     }
 
@@ -90,6 +98,7 @@ namespace TeamTasker.API.Controllers
         /// <summary>
         /// Joined date
         /// </summary>
+        [JsonPropertyName("joinedDate")]
         public DateTime JoinedDate { get; set; }
     }
 

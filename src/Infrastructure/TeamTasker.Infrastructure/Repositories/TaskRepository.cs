@@ -221,25 +221,25 @@ namespace TeamTasker.Infrastructure.Repositories
 
             var query = _dbContext.Tasks.AsQueryable();
 
-            // Apply task type filter
-            if (currentUserId.HasValue && !string.IsNullOrEmpty(taskType))
+            // Apply task type filter - default to 'my' for security if no taskType specified
+            if (currentUserId.HasValue)
             {
-                switch (taskType.ToLower())
+                var effectiveTaskType = string.IsNullOrEmpty(taskType) ? "my" : taskType.ToLower();
+                switch (effectiveTaskType)
                 {
                     case "my":
-                        // My tasks - tasks that were both created by AND assigned to the current user
+                        // My tasks - tasks that were created by OR assigned to the current user
                         // First, get the team member IDs for the current user
                         var currentUserTeamMemberIds = _dbContext.TeamMembers
                             .Where(tm => tm.UserId == currentUserId.Value)
                             .Select(tm => tm.Id);
 
-                        // Get tasks where the current user is both creator and assignee
+                        // Get tasks where the current user is either creator or assignee
                         if (currentUserTeamMemberIds.Any())
                         {
-                            // Prioritize team member assignments
                             query = query.Where(t =>
                                 // Creator is the current user's team member
-                                (t.CreatorTeamMemberId.HasValue && currentUserTeamMemberIds.Contains(t.CreatorTeamMemberId.Value)) &&
+                                (t.CreatorTeamMemberId.HasValue && currentUserTeamMemberIds.Contains(t.CreatorTeamMemberId.Value)) ||
                                 // Assignee is the current user's team member
                                 (t.AssignedToTeamMemberId.HasValue && currentUserTeamMemberIds.Contains(t.AssignedToTeamMemberId.Value)));
                         }

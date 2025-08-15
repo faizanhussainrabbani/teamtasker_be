@@ -34,6 +34,7 @@ namespace TeamTasker.Infrastructure.Data
         public DbSet<UserSkill> UserSkills { get; set; }
         public DbSet<Tag> Tags { get; set; }
         public DbSet<TaskTag> TaskTags { get; set; }
+        public DbSet<Activity> Activities { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

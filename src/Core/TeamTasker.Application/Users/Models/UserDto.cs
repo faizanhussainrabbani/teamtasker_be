@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json.Serialization;
 
 namespace TeamTasker.Application.Users.Models
 {
@@ -60,11 +61,13 @@ namespace TeamTasker.Application.Users.Models
         /// <summary>
         /// Created date
         /// </summary>
+        [JsonPropertyName("createdDate")]
         public DateTime CreatedDate { get; set; }
-        
+
         /// <summary>
         /// Updated date
         /// </summary>
+        [JsonPropertyName("updatedDate")]
         public DateTime UpdatedDate { get; set; }
     }
 }

@@ -9,6 +9,7 @@ using TeamTasker.Application.Common.Interfaces;
 using TeamTasker.Domain.Interfaces;
 using TeamTasker.Infrastructure.Extensions;
 using TeamTasker.Infrastructure.Repositories;
+using TeamTasker.Infrastructure.Data.Repositories;
 using TeamTasker.SharedKernel.Interfaces;
 
 namespace TeamTasker.Infrastructure.Data
@@ -29,6 +30,7 @@ namespace TeamTasker.Infrastructure.Data
         private ITeamRepository? _teamRepository;
         private ITeamMemberRepository? _teamMemberRepository;
         private IUserRepository? _userRepository;
+        private IActivityRepository? _activityRepository;
 
         public UnitOfWork(
             ApplicationDbContext dbContext,
@@ -59,6 +61,9 @@ namespace TeamTasker.Infrastructure.Data
         public IUserRepository UserRepository =>
             _userRepository ??= new UserRepository(_dbContext,
                 (ILogger<UserRepository>)_logger.CreateLoggerInstance(typeof(UserRepository)));
+
+        public IActivityRepository ActivityRepository =>
+            _activityRepository ??= new ActivityRepository(_dbContext);
 
         public IRepository<TEntity> Repository<TEntity>() where TEntity : TeamTasker.SharedKernel.BaseEntity
         {

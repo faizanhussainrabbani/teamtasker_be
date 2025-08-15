@@ -42,6 +42,11 @@ namespace TeamTasker.Application.Common.Interfaces
         IUserRepository UserRepository { get; }
 
         /// <summary>
+        /// Gets the activity repository
+        /// </summary>
+        IActivityRepository ActivityRepository { get; }
+
+        /// <summary>
         /// Saves all changes made in this context to the database
         /// </summary>
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);

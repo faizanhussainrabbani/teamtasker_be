@@ -76,6 +76,10 @@ namespace TeamTasker.API.Controllers
                     return Unauthorized(new { message = "Invalid token" });
                 }
 
+                // Ensure the user has a team membership before filtering tasks
+                // This is needed for the security filtering to work properly
+                await _teamMemberRepository.EnsureUserHasTeamMembershipAsync(currentUserId.Value);
+
                 // Parse status and priority
                 DomainTaskStatus? status = null;
                 if (!string.IsNullOrEmpty(filterParams.Status))

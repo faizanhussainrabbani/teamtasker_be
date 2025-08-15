@@ -47,15 +47,16 @@ namespace TeamTasker.API.Controllers
         /// <summary>
         /// Get all teams
         /// </summary>
+        /// <param name="myTeams">Filter to only teams where the current user is a member</param>
         /// <returns>List of teams</returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<List<TeamDto>>> GetTeams()
+        public async Task<ActionResult<List<TeamDto>>> GetTeams([FromQuery] bool myTeams = false)
         {
             try
             {
-                _logger.LogInformation("Getting all teams");
+                _logger.LogInformation("Getting teams (myTeams: {MyTeams})", myTeams);
 
                 var currentUserId = _currentUserService.UserId;
                 if (currentUserId == null)
@@ -63,7 +64,19 @@ namespace TeamTasker.API.Controllers
                     return Unauthorized(new { message = "Invalid token" });
                 }
 
-                var teams = await _teamRepository.ListAllAsync();
+                List<Team> teams;
+
+                if (myTeams)
+                {
+                    // Get teams where the current user is a member
+                    teams = await _teamRepository.GetTeamsByUserIdAsync(currentUserId.Value);
+                }
+                else
+                {
+                    // Get all teams
+                    teams = (await _teamRepository.ListAllAsync()).ToList();
+                }
+
                 var teamDtos = teams.Select(t => new TeamDto
                 {
                     Id = t.Id,
@@ -78,6 +91,7 @@ namespace TeamTasker.API.Controllers
                         Avatar = t.Lead.Avatar,
                         Initials = t.Lead.Initials
                     } : null,
+                    MemberCount = t.Members?.Count ?? 0,
                     CreatedDate = t.CreatedDate,
                     UpdatedDate = t.UpdatedDate
                 }).ToList();
@@ -132,6 +146,7 @@ namespace TeamTasker.API.Controllers
                         Avatar = team.Lead.Avatar,
                         Initials = team.Lead.Initials
                     } : null,
+                    MemberCount = team.Members?.Count ?? 0,
                     Members = team.Members.Select(m => new TeamMemberDto
                     {
                         Id = m.Id,
@@ -209,6 +224,7 @@ namespace TeamTasker.API.Controllers
                     Description = team.Description,
                     Department = team.Department,
                     LeadId = team.LeadId,
+                    MemberCount = request.LeadId != currentUserId ? 1 : 0, // Count the admin member if added
                     CreatedDate = team.CreatedDate,
                     UpdatedDate = team.UpdatedDate
                 };

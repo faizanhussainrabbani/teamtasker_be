@@ -1,4 +1,3 @@
-using System;
 using TeamTasker.Application.Common.Models;
 
 namespace TeamTasker.Application.Tasks.Models
@@ -49,8 +48,13 @@ namespace TeamTasker.Application.Tasks.Models
         public bool IncludeCreator { get; set; } = true;
 
         /// <summary>
-        /// Search term for filtering tasks
+        /// Include tags information
         /// </summary>
-        public string? Search { get; set; }
+        public bool IncludeTags { get; set; } = true;
+
+        /// <summary>
+        /// Include assignee information
+        /// </summary>
+        public bool IncludeAssignee { get; set; } = true;
     }
 }

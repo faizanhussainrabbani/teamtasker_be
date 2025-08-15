@@ -17,6 +17,56 @@ namespace TeamTasker.Infrastructure.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.4");
 
+            modelBuilder.Entity("TeamTasker.Domain.Entities.Activity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Action")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("AssigneeId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Comment")
+                        .HasMaxLength(1000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Target")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("TargetId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("TargetType")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Action");
+
+                    b.HasIndex("AssigneeId");
+
+                    b.HasIndex("CreatedDate");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("TargetType", "TargetId");
+
+                    b.ToTable("Activities", (string)null);
+                });
+
             modelBuilder.Entity("TeamTasker.Domain.Entities.Project", b =>
                 {
                     b.Property<int>("Id")
@@ -418,6 +468,24 @@ namespace TeamTasker.Infrastructure.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserSkills");
+                });
+
+            modelBuilder.Entity("TeamTasker.Domain.Entities.Activity", b =>
+                {
+                    b.HasOne("TeamTasker.Domain.Entities.User", "Assignee")
+                        .WithMany()
+                        .HasForeignKey("AssigneeId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("TeamTasker.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Assignee");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("TeamTasker.Domain.Entities.Project", b =>

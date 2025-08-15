@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using System.ComponentModel;
 
 namespace TeamTasker.Application.Tasks.Models
@@ -94,16 +95,19 @@ namespace TeamTasker.Application.Tasks.Models
         /// <summary>
         /// Created date
         /// </summary>
+        [JsonPropertyName("createdDate")]
         public DateTime CreatedDate { get; set; }
 
         /// <summary>
         /// Updated date
         /// </summary>
+        [JsonPropertyName("updatedDate")]
         public DateTime UpdatedDate { get; set; }
 
         /// <summary>
         /// Completed date
         /// </summary>
+        [JsonPropertyName("completedDate")]
         public DateTime? CompletedDate { get; set; }
     }
 
