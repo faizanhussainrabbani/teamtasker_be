@@ -9,7 +9,6 @@ using System;
 using System.IO;
 using System.Reflection;
 using TeamTasker.API.Extensions;
-using TeamTasker.API.Filters;
 using TeamTasker.Application;
 using TeamTasker.Infrastructure;
 
@@ -27,13 +26,43 @@ builder.Services.AddInfrastructure(builder.Configuration);
 
 builder.Services.AddHttpContextAccessor();
 
-builder.Services.AddControllers(options =>
-    options.Filters.Add<ApiExceptionFilterAttribute>());
+builder.Services.AddControllers();
+
+// Emit strict { status, title, detail, errors } shape for model-validation failures
+// so E2E contract tests (E2E-ERR-01, strict-error-shape helpers) observe a single
+// error contract across validation, 401, 403, 404, 409, and 500 paths.
+builder.Services.Configure<Microsoft.AspNetCore.Mvc.ApiBehaviorOptions>(options =>
+{
+    options.InvalidModelStateResponseFactory = context =>
+    {
+        var errors = context.ModelState
+            .Where(kvp => kvp.Value is { Errors.Count: > 0 })
+            .ToDictionary(
+                kvp => kvp.Key,
+                kvp => kvp.Value!.Errors.Select(e => e.ErrorMessage).ToArray());
+
+        var payload = new
+        {
+            status = StatusCodes.Status400BadRequest,
+            title = "Validation Error",
+            detail = "One or more validation errors occurred.",
+            errors
+        };
+
+        return new Microsoft.AspNetCore.Mvc.BadRequestObjectResult(payload)
+        {
+            ContentTypes = { "application/json" }
+        };
+    };
+});
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
+    // Avoid schema naming collisions when different namespaces share the same type name.
+    c.CustomSchemaIds(type => type.FullName?.Replace("+", ".") ?? type.Name);
+
     c.SwaggerDoc("v1", new OpenApiInfo
     {
         Title = "TeamTasker API",

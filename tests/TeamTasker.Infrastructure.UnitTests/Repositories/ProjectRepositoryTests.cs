@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 using TeamTasker.Domain.Entities;
 using TeamTasker.Infrastructure.Data;
@@ -40,7 +41,8 @@ namespace TeamTasker.Infrastructure.UnitTests.Repositories
             // Use a separate instance of the context to verify correct data was saved
             using (var context = new ApplicationDbContext(options, domainEventDispatcher))
             {
-                var repository = new ProjectRepository(context);
+                var logger = Substitute.For<ILogger<ProjectRepository>>();
+                var repository = new ProjectRepository(context, logger);
 
                 // Act
                 var result = await repository.GetProjectWithTasksAsync(1);
@@ -67,7 +69,8 @@ namespace TeamTasker.Infrastructure.UnitTests.Repositories
 
             using (var context = new ApplicationDbContext(options, domainEventDispatcher))
             {
-                var repository = new ProjectRepository(context);
+                var logger = Substitute.For<ILogger<ProjectRepository>>();
+                var repository = new ProjectRepository(context, logger);
 
                 // Act
                 var result = await repository.GetProjectWithTasksAsync(999);
@@ -113,7 +116,8 @@ namespace TeamTasker.Infrastructure.UnitTests.Repositories
             // Use a separate instance of the context to verify correct data was saved
             using (var context = new ApplicationDbContext(options, domainEventDispatcher))
             {
-                var repository = new ProjectRepository(context);
+                var logger = Substitute.For<ILogger<ProjectRepository>>();
+                var repository = new ProjectRepository(context, logger);
 
                 // Act
                 var result = await repository.GetProjectsByUserIdAsync(userId);

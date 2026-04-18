@@ -10,7 +10,10 @@ namespace TeamTasker.Domain.Entities
     /// </summary>
     public class Project : BaseEntity
     {
-        private Project() { } // Required by EF Core
+        private Project()
+        {
+            Tasks = new List<Entities.Task>();
+        } // Required by EF Core
 
         public Project(string name, string description, DateTime startDate, DateTime? endDate, int? teamId = null)
         {
@@ -75,6 +78,8 @@ namespace TeamTasker.Domain.Entities
 
         public Entities.Task AddTask(string title, string description, DateTime dueDate, TaskPriority priority)
         {
+            Tasks ??= new List<Entities.Task>();
+
             var task = new Entities.Task(title, description, dueDate, priority, this.Id);
             Tasks.Add(task);
             UpdatedDate = DateTime.UtcNow;

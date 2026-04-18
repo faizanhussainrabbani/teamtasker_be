@@ -19,9 +19,19 @@ namespace TeamTasker.Application.Common.Models
         public List<T> Items { get; }
 
         /// <summary>
+        /// Frontend-compatible alias for Items
+        /// </summary>
+        public List<T> Data => Items;
+
+        /// <summary>
         /// Current page number (1-based)
         /// </summary>
         public int PageNumber { get; }
+
+        /// <summary>
+        /// Frontend-compatible alias for PageNumber
+        /// </summary>
+        public int Page => PageNumber;
 
         /// <summary>
         /// Number of items per page
@@ -29,9 +39,19 @@ namespace TeamTasker.Application.Common.Models
         public int PageSize { get; }
 
         /// <summary>
+        /// Frontend-compatible alias for PageSize
+        /// </summary>
+        public int Limit => PageSize;
+
+        /// <summary>
         /// Total number of items across all pages
         /// </summary>
         public int TotalCount { get; }
+
+        /// <summary>
+        /// Frontend-compatible alias for TotalCount
+        /// </summary>
+        public int Total => TotalCount;
 
         /// <summary>
         /// Total number of pages

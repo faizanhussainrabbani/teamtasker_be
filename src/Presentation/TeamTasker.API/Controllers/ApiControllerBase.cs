@@ -14,5 +14,16 @@ namespace TeamTasker.API.Controllers
         private ISender _mediator;
 
         protected ISender Mediator => _mediator ??= HttpContext.RequestServices.GetRequiredService<ISender>();
+
+        protected static object CreateProblemResponse(int status, string title, string detail, object errors = null)
+        {
+            return new
+            {
+                status,
+                title,
+                detail,
+                errors
+            };
+        }
     }
 }

@@ -46,6 +46,7 @@ namespace TeamTasker.Infrastructure
             configuration.GetSection("JwtSettings").Bind(jwtSettings);
             services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
             services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
+            services.AddSingleton<IRefreshTokenService, RefreshTokenService>();
             services.AddSingleton<IPasswordHasher, PasswordHasher>();
 
             // Register email and password reset services
@@ -67,6 +68,7 @@ namespace TeamTasker.Infrastructure
             {
                 options.SaveToken = true;
                 options.RequireHttpsMetadata = false;
+                options.MapInboundClaims = false;
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
@@ -75,6 +77,7 @@ namespace TeamTasker.Infrastructure
                     ValidateIssuerSigningKey = true,
                     ValidIssuer = jwtSettings.Issuer,
                     ValidAudience = jwtSettings.Audience,
+                    RoleClaimType = "role",
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Secret))
                 };
             });

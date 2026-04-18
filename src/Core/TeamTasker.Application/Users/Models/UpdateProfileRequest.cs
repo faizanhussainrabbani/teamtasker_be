@@ -29,27 +29,27 @@ namespace TeamTasker.Application.Users.Models
         /// <summary>
         /// Department
         /// </summary>
-        public string Department { get; set; }
-        
+        public string? Department { get; set; }
+
         /// <summary>
         /// Bio
         /// </summary>
-        public string Bio { get; set; }
-        
+        public string? Bio { get; set; }
+
         /// <summary>
         /// Location
         /// </summary>
-        public string Location { get; set; }
-        
+        public string? Location { get; set; }
+
         /// <summary>
         /// Phone
         /// </summary>
-        public string Phone { get; set; }
-        
+        public string? Phone { get; set; }
+
         /// <summary>
         /// Address
         /// </summary>
-        public AddressUpdateRequest Address { get; set; }
+        public AddressUpdateRequest? Address { get; set; }
     }
     
     /// <summary>

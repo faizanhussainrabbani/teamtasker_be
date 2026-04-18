@@ -28,6 +28,11 @@ namespace TeamTasker.Application.Users.Models
         /// Full name
         /// </summary>
         public string FullName { get; set; }
+
+        /// <summary>
+        /// Frontend-compatible name alias
+        /// </summary>
+        public string Name { get; set; }
         
         /// <summary>
         /// Email

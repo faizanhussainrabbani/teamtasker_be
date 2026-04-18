@@ -64,18 +64,33 @@ namespace TeamTasker.Domain.Entities
             UpdatedDate = DateTime.UtcNow;
 
             // Automatically update status based on progress
-            if (progress == 0 && Status != TaskStatus.ToDo)
+            if (progress == 100)
             {
-                Status = TaskStatus.ToDo;
+                if (Status != TaskStatus.Done)
+                {
+                    Status = TaskStatus.Done;
+                }
+
+                if (!CompletedDate.HasValue)
+                {
+                    CompletedDate = DateTime.UtcNow;
+                }
             }
-            else if (progress > 0 && progress < 100 && Status != TaskStatus.InProgress)
+            else
             {
-                Status = TaskStatus.InProgress;
-            }
-            else if (progress == 100 && Status != TaskStatus.Done)
-            {
-                Status = TaskStatus.Done;
-                CompletedDate = DateTime.UtcNow;
+                if (Status == TaskStatus.Done)
+                {
+                    CompletedDate = null;
+                }
+
+                if (progress == 0 && Status != TaskStatus.ToDo)
+                {
+                    Status = TaskStatus.ToDo;
+                }
+                else if (progress > 0 && progress < 100 && Status != TaskStatus.InProgress)
+                {
+                    Status = TaskStatus.InProgress;
+                }
             }
 
             AddDomainEvent(new TaskProgressUpdatedEvent(this));
@@ -83,18 +98,42 @@ namespace TeamTasker.Domain.Entities
 
         public void UpdateStatus(TaskStatus status)
         {
-            if (status == TaskStatus.Done && Status != TaskStatus.Done)
+            if (status == TaskStatus.Done)
             {
-                CompletedDate = DateTime.UtcNow;
                 Progress = 100;
+
+                if (Status != TaskStatus.Done || !CompletedDate.HasValue)
+                {
+                    CompletedDate = DateTime.UtcNow;
+                }
             }
-            else if (status == TaskStatus.InProgress && Progress == 0)
+            else
             {
-                Progress = 1; // Set to at least 1% when moving to in progress
-            }
-            else if (status == TaskStatus.ToDo)
-            {
-                Progress = 0;
+                if (Status == TaskStatus.Done)
+                {
+                    CompletedDate = null;
+                }
+
+                if (status == TaskStatus.ToDo)
+                {
+                    Progress = 0;
+                }
+                else if (status == TaskStatus.InProgress)
+                {
+                    if (Progress <= 0)
+                    {
+                        Progress = 10;
+                    }
+                    else if (Progress >= 100)
+                    {
+                        Progress = 90;
+                    }
+                }
+                else if ((status == TaskStatus.Blocked || status == TaskStatus.OnHold || status == TaskStatus.Cancelled) &&
+                         Progress >= 100)
+                {
+                    Progress = 90;
+                }
             }
 
             Status = status;

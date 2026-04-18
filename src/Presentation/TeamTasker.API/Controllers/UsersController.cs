@@ -20,10 +20,8 @@ namespace TeamTasker.API.Controllers
     /// <summary>
     /// Controller for user management
     /// </summary>
-    [ApiController]
-    [Route("api/[controller]")]
     [Authorize]
-    public class UsersController : ControllerBase
+    public class UsersController : ApiControllerBase
     {
         private readonly IUserRepository _userRepository;
         private readonly IApplicationDbContext _dbContext;
@@ -128,6 +126,7 @@ namespace TeamTasker.API.Controllers
                     FirstName = u.FirstName,
                     LastName = u.LastName,
                     FullName = u.FullName,
+                    Name = u.FullName,
                     Email = u.Email,
                     Username = u.Username,
                     Role = u.Role,
@@ -150,7 +149,12 @@ namespace TeamTasker.API.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error getting users");
-                return StatusCode(500, new { message = "An error occurred while processing your request" });
+                return StatusCode(
+                    StatusCodes.Status500InternalServerError,
+                    CreateProblemResponse(
+                        StatusCodes.Status500InternalServerError,
+                        "Server Error",
+                        "An error occurred while processing your request"));
             }
         }
 
@@ -170,7 +174,10 @@ namespace TeamTasker.API.Controllers
                 var user = await _userRepository.GetByIdAsync(id);
                 if (user == null)
                 {
-                    return NotFound(new { message = "User not found" });
+                    return NotFound(CreateProblemResponse(
+                        StatusCodes.Status404NotFound,
+                        "Resource Not Found",
+                        "User not found"));
                 }
 
                 // Load user skills
@@ -189,6 +196,7 @@ namespace TeamTasker.API.Controllers
                     FirstName = user.FirstName,
                     LastName = user.LastName,
                     FullName = user.FullName,
+                    Name = user.FullName,
                     Email = user.Email,
                     Username = user.Username,
                     Role = user.Role,
@@ -215,7 +223,12 @@ namespace TeamTasker.API.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error getting user {UserId}", id);
-                return StatusCode(500, new { message = "An error occurred while processing your request" });
+                return StatusCode(
+                    StatusCodes.Status500InternalServerError,
+                    CreateProblemResponse(
+                        StatusCodes.Status500InternalServerError,
+                        "Server Error",
+                        "An error occurred while processing your request"));
             }
         }
 
@@ -233,7 +246,10 @@ namespace TeamTasker.API.Controllers
                 var currentUserId = _currentUserService.UserId;
                 if (currentUserId == null)
                 {
-                    return Unauthorized(new { message = "Invalid token" });
+                    return Unauthorized(CreateProblemResponse(
+                        StatusCodes.Status401Unauthorized,
+                        "Unauthorized",
+                        "Invalid token"));
                 }
 
                 return await GetUser(currentUserId.Value);
@@ -241,7 +257,12 @@ namespace TeamTasker.API.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error getting profile");
-                return StatusCode(500, new { message = "An error occurred while processing your request" });
+                return StatusCode(
+                    StatusCodes.Status500InternalServerError,
+                    CreateProblemResponse(
+                        StatusCodes.Status500InternalServerError,
+                        "Server Error",
+                        "An error occurred while processing your request"));
             }
         }
 
@@ -251,6 +272,7 @@ namespace TeamTasker.API.Controllers
         /// <param name="request">Update profile request</param>
         /// <returns>Updated user profile</returns>
         [HttpPatch("profile")]
+        [Authorize(Roles = "Admin,User")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -261,13 +283,19 @@ namespace TeamTasker.API.Controllers
                 var currentUserId = _currentUserService.UserId;
                 if (currentUserId == null)
                 {
-                    return Unauthorized(new { message = "Invalid token" });
+                    return Unauthorized(CreateProblemResponse(
+                        StatusCodes.Status401Unauthorized,
+                        "Unauthorized",
+                        "Invalid token"));
                 }
 
                 var user = await _userRepository.GetByIdAsync(currentUserId.Value);
                 if (user == null)
                 {
-                    return Unauthorized(new { message = "User not found" });
+                    return Unauthorized(CreateProblemResponse(
+                        StatusCodes.Status401Unauthorized,
+                        "Unauthorized",
+                        "User not found"));
                 }
 
                 // Check if email is already taken by another user
@@ -276,7 +304,10 @@ namespace TeamTasker.API.Controllers
                     var existingUser = await _userRepository.GetByEmailAsync(request.Email);
                     if (existingUser != null && existingUser.Id != user.Id)
                     {
-                        return BadRequest(new { message = "Email is already taken" });
+                        return BadRequest(CreateProblemResponse(
+                            StatusCodes.Status400BadRequest,
+                            "Bad Request",
+                            "Email is already taken"));
                     }
                 }
 
@@ -311,7 +342,12 @@ namespace TeamTasker.API.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error updating profile");
-                return StatusCode(500, new { message = "An error occurred while processing your request" });
+                return StatusCode(
+                    StatusCodes.Status500InternalServerError,
+                    CreateProblemResponse(
+                        StatusCodes.Status500InternalServerError,
+                        "Server Error",
+                        "An error occurred while processing your request"));
             }
         }
     }

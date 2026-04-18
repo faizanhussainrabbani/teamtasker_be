@@ -1,10 +1,14 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using TeamTasker.Application.Common.Exceptions;
+using AppValidationException = TeamTasker.Application.Common.Exceptions.ValidationException;
+using FluentValidationException = FluentValidation.ValidationException;
 
 namespace TeamTasker.API.Middleware
 {
@@ -64,7 +68,8 @@ namespace TeamTasker.API.Middleware
         {
             return exception switch
             {
-                ValidationException => (int)HttpStatusCode.BadRequest,
+                AppValidationException => (int)HttpStatusCode.BadRequest,
+                FluentValidationException => (int)HttpStatusCode.BadRequest,
                 NotFoundException => (int)HttpStatusCode.NotFound,
                 ForbiddenAccessException => (int)HttpStatusCode.Forbidden,
                 BadRequestException => (int)HttpStatusCode.BadRequest,
@@ -77,7 +82,8 @@ namespace TeamTasker.API.Middleware
         {
             return exception switch
             {
-                ValidationException => "Validation Error",
+                AppValidationException => "Validation Error",
+                FluentValidationException => "Validation Error",
                 NotFoundException => "Resource Not Found",
                 ForbiddenAccessException => "Forbidden",
                 BadRequestException => "Bad Request",
@@ -86,11 +92,39 @@ namespace TeamTasker.API.Middleware
             };
         }
 
-        private static object GetErrors(Exception exception)
+        private static object? GetErrors(Exception exception)
         {
-            if (exception is ValidationException validationException)
+            if (exception is AppValidationException validationException)
             {
-                return validationException.Errors;
+                if (validationException.Errors.Count > 0)
+                {
+                    return validationException.Errors;
+                }
+
+                return new Dictionary<string, string[]>
+                {
+                    ["general"] = new[] { validationException.Message }
+                };
+            }
+
+            if (exception is FluentValidationException fluentValidationException)
+            {
+                var groupedErrors = fluentValidationException.Errors
+                    .Where(error => !string.IsNullOrWhiteSpace(error.ErrorMessage))
+                    .GroupBy(error => string.IsNullOrWhiteSpace(error.PropertyName) ? "general" : error.PropertyName)
+                    .ToDictionary(
+                        group => group.Key,
+                        group => group.Select(error => error.ErrorMessage).Distinct().ToArray());
+
+                if (groupedErrors.Count > 0)
+                {
+                    return groupedErrors;
+                }
+
+                return new Dictionary<string, string[]>
+                {
+                    ["general"] = new[] { fluentValidationException.Message }
+                };
             }
             
             return null;

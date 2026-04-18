@@ -1,11 +1,13 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TeamTasker.Application.Common.Models;
 using TeamTasker.Application.Projects.Commands.CreateProject;
 using TeamTasker.Application.Projects.Commands.DeleteProject;
 using TeamTasker.Application.Projects.Commands.UpdateProject;
+using TeamTasker.Application.Projects.Commands.UpdateProjectStatus;
 using TeamTasker.Application.Projects.Queries.GetProjectById;
 using TeamTasker.Application.Projects.Queries.GetProjects;
 
@@ -14,6 +16,7 @@ namespace TeamTasker.API.Controllers
     /// <summary>
     /// Controller for managing projects
     /// </summary>
+    [Authorize]
     public class ProjectsController : ApiControllerBase
     {
         /// <summary>
@@ -60,6 +63,7 @@ namespace TeamTasker.API.Controllers
         /// <param name="command">Create project command</param>
         /// <returns>Created project id</returns>
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<int>> Create(CreateProjectCommand command)
@@ -76,6 +80,7 @@ namespace TeamTasker.API.Controllers
         /// <param name="command">Update project command</param>
         /// <returns>No content</returns>
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -83,7 +88,10 @@ namespace TeamTasker.API.Controllers
         {
             if (id != command.Id)
             {
-                return BadRequest();
+                return BadRequest(CreateProblemResponse(
+                    StatusCodes.Status400BadRequest,
+                    "Bad Request",
+                    "Project id in route and body must match."));
             }
 
             await Mediator.Send(command);
@@ -92,11 +100,34 @@ namespace TeamTasker.API.Controllers
         }
 
         /// <summary>
+        /// Update project status.
+        /// </summary>
+        /// <param name="id">Project id</param>
+        /// <param name="request">Status update request</param>
+        /// <returns>Updated project</returns>
+        [HttpPatch("{id}/status")]
+        [Authorize(Roles = "Admin")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<ProjectDto>> UpdateStatus(int id, UpdateProjectStatusRequest request)
+        {
+            var updatedProject = await Mediator.Send(new UpdateProjectStatusCommand
+            {
+                Id = id,
+                Status = request?.Status
+            });
+
+            return Ok(updatedProject);
+        }
+
+        /// <summary>
         /// Delete a project
         /// </summary>
         /// <param name="id">Project id</param>
         /// <returns>No content</returns>
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> Delete(int id)
@@ -105,5 +136,13 @@ namespace TeamTasker.API.Controllers
 
             return NoContent();
         }
+    }
+
+    /// <summary>
+    /// Request model for project status updates.
+    /// </summary>
+    public class UpdateProjectStatusRequest
+    {
+        public string Status { get; set; }
     }
 }

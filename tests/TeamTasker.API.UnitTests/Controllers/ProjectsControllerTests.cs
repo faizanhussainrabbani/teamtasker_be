@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
 using TeamTasker.API.Controllers;
 using TeamTasker.Application.Common.Exceptions;
+using TeamTasker.Application.Common.Models;
 using TeamTasker.Application.Projects.Commands.CreateProject;
 using TeamTasker.Application.Projects.Commands.DeleteProject;
 using TeamTasker.Application.Projects.Commands.UpdateProject;
@@ -38,11 +39,15 @@ namespace TeamTasker.API.UnitTests.Controllers
         public async Task GetProjects_ShouldReturnOkResult_WithListOfProjects()
         {
             // Arrange
-            var projects = new List<ProjectDto>
-            {
-                new ProjectDto { Id = 1, Name = "Project 1", Description = "Description 1" },
-                new ProjectDto { Id = 2, Name = "Project 2", Description = "Description 2" }
-            };
+            var projects = new PaginatedList<ProjectDto>(
+                new List<ProjectDto>
+                {
+                    new ProjectDto { Id = 1, Name = "Project 1", Description = "Description 1" },
+                    new ProjectDto { Id = 2, Name = "Project 2", Description = "Description 2" }
+                },
+                2,
+                1,
+                10);
 
             _mediator.Send(Arg.Any<GetProjectsQuery>(), Arg.Any<CancellationToken>())
                 .Returns(Task.FromResult(projects));
@@ -51,14 +56,12 @@ namespace TeamTasker.API.UnitTests.Controllers
             var result = await _controller.GetProjects();
 
             // Assert
-            var okResult = result.Result.Should().BeOfType<OkObjectResult>().Subject;
-            var returnValue = okResult.Value.Should().BeAssignableTo<List<ProjectDto>>().Subject;
-
-            returnValue.Should().HaveCount(2);
-            returnValue[0].Id.Should().Be(1);
-            returnValue[0].Name.Should().Be("Project 1");
-            returnValue[1].Id.Should().Be(2);
-            returnValue[1].Name.Should().Be("Project 2");
+            result.Value.Should().NotBeNull();
+            result.Value.Items.Should().HaveCount(2);
+            result.Value.Items[0].Id.Should().Be(1);
+            result.Value.Items[0].Name.Should().Be("Project 1");
+            result.Value.Items[1].Id.Should().Be(2);
+            result.Value.Items[1].Name.Should().Be("Project 2");
         }
 
         [Fact]
@@ -85,12 +88,10 @@ namespace TeamTasker.API.UnitTests.Controllers
             var result = await _controller.GetProject(projectId);
 
             // Assert
-            var okResult = result.Result.Should().BeOfType<OkObjectResult>().Subject;
-            var returnValue = okResult.Value.Should().BeAssignableTo<ProjectDetailDto>().Subject;
-
-            returnValue.Id.Should().Be(projectId);
-            returnValue.Name.Should().Be("Test Project");
-            returnValue.Tasks.Should().HaveCount(2);
+            result.Value.Should().NotBeNull();
+            result.Value.Id.Should().Be(projectId);
+            result.Value.Name.Should().Be("Test Project");
+            result.Value.Tasks.Should().HaveCount(2);
         }
 
         [Fact]

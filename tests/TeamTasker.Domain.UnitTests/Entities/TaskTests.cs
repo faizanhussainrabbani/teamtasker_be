@@ -110,6 +110,45 @@ namespace TeamTasker.Domain.UnitTests.Entities
             // Assert
             task.Status.Should().Be(newStatus);
             task.CompletedDate.Should().BeNull();
+            task.Progress.Should().Be(10);
+        }
+
+        [Fact]
+        public void UpdateStatus_WhenMovingFromDoneToInProgress_ShouldClearCompletionAndReduceProgress()
+        {
+            // Arrange
+            var task = new Domain.Entities.Task("Test Task", "Test Description", DateTime.UtcNow, Domain.Entities.TaskPriority.Medium, 1);
+            task.UpdateStatus(Domain.Entities.TaskStatus.Done);
+
+            // Clear domain events from constructor and first status update
+            task.ClearDomainEvents();
+
+            // Act
+            task.UpdateStatus(Domain.Entities.TaskStatus.InProgress);
+
+            // Assert
+            task.Status.Should().Be(Domain.Entities.TaskStatus.InProgress);
+            task.Progress.Should().Be(90);
+            task.CompletedDate.Should().BeNull();
+        }
+
+        [Fact]
+        public void UpdateProgress_WhenProgressDropsBelowComplete_ShouldClearCompletionDate()
+        {
+            // Arrange
+            var task = new Domain.Entities.Task("Test Task", "Test Description", DateTime.UtcNow, Domain.Entities.TaskPriority.Medium, 1);
+            task.UpdateStatus(Domain.Entities.TaskStatus.Done);
+
+            // Clear domain events from constructor and first status update
+            task.ClearDomainEvents();
+
+            // Act
+            task.UpdateProgress(60);
+
+            // Assert
+            task.Status.Should().Be(Domain.Entities.TaskStatus.InProgress);
+            task.CompletedDate.Should().BeNull();
+            task.Progress.Should().Be(60);
         }
 
         [Fact]

@@ -22,12 +22,22 @@ namespace TeamTasker.Infrastructure.Services
         {
             get
             {
-                var userId = _httpContextAccessor.HttpContext?.User?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-                return !string.IsNullOrEmpty(userId) ? int.Parse(userId) : null;
+                var claims = _httpContextAccessor.HttpContext?.User?.Claims;
+                if (claims == null)
+                {
+                    return null;
+                }
+
+                var userId = claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value
+                    ?? claims.FirstOrDefault(c => c.Type == "sub")?.Value;
+
+                return int.TryParse(userId, out var parsed) ? parsed : null;
             }
         }
 
-        public string Username => _httpContextAccessor.HttpContext?.User?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+        public string Username =>
+            _httpContextAccessor.HttpContext?.User?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value
+            ?? _httpContextAccessor.HttpContext?.User?.Claims.FirstOrDefault(c => c.Type == "username")?.Value;
 
         public bool IsAuthenticated => _httpContextAccessor.HttpContext?.User?.Identity?.IsAuthenticated ?? false;
     }

@@ -24,10 +24,25 @@ namespace TeamTasker.Application.Auth.Models
         /// Full name
         /// </summary>
         public string FullName { get; set; }
+
+        /// <summary>
+        /// Role assigned to the user
+        /// </summary>
+        public string Role { get; set; }
         
         /// <summary>
         /// JWT token
         /// </summary>
         public string Token { get; set; }
+
+        /// <summary>
+        /// Refresh token
+        /// </summary>
+        public string RefreshToken { get; set; }
+
+        /// <summary>
+        /// Access token expiry time in UTC
+        /// </summary>
+        public System.DateTime? ExpiresAt { get; set; }
     }
 }
